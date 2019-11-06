@@ -87,6 +87,7 @@ OBJPRE = $(addprefix $(OBJDIR)/,$(ASM_OBJECTS) $(C_OBJECTS) $(CC_OBJECTS))
 # Default target: Das Image fuer USB-Sticks und QEMU
 
 all: $(OBJDIR)/bootdisk.iso
+	cp $(OBJDIR)/bootdisk.iso ~/shared/
 
 # --------------------------------------------------------------------------
 # Regeln zur Erzeugung der Abhaengigkeitsdateien
