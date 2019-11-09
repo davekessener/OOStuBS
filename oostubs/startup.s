@@ -514,12 +514,16 @@ init_stack:
 [GLOBAL pd]
 
 pml4:
-	resb   4096
+	times  4096 db 0
+;	resb   4096
 	alignb 4096
 
 pdp:
-	resb   MAX_MEM*8
-	alignb 4096
+	times  MAX_MEM*8 db 0
+;	resb   MAX_MEM*8
+	align  4096
+;	alignb 4096
 
 pd:
-	resb   MAX_MEM*4096
+	times  MAX_MEM*4096 db 0
+;	resb   MAX_MEM*4096

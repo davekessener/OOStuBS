@@ -11,18 +11,21 @@
 /* Methoden der Klasse CGA_Screen zur Verfuegung.                            */
 /*****************************************************************************/
 
-#ifndef __cgastr_include__
-#define __cgastr_include__
+#ifndef OOSTUBS_DEVICE_CGASTREAM_H
+#define OOSTUBS_DEVICE_CGASTREAM_H
 
 #include "object/o_stream.h"
-#include "machine/cgascr.h"
 
-class CGA_Stream 
-/* Hier muesst ihr selbst Code vervollstaendigen */         
- {
-private:
-      CGA_Stream(CGA_Stream &copy); // Verhindere Kopieren
-/* Hier muesst ihr selbst Code vervollstaendigen */ 
- };
+#include "machine/cga_screen.h"
+
+namespace oostubs
+{
+	class CGAStream
+	{
+		private:
+			CGAStream(const CGAStream&) = delete;
+	};
+}
 
 #endif
+

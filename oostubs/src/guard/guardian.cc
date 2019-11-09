@@ -2,15 +2,19 @@
 /* Betriebssysteme                                                           */
 /*---------------------------------------------------------------------------*/
 /*                                                                           */
-/*                         C G A _ S T R E A M                               */
+/*                              G U A R D I A N                              */
 /*                                                                           */
 /*---------------------------------------------------------------------------*/
-/* Die Klasse CGA_Stream ermoeglicht die Ausgabe verschiedener Datentypen    */
-/* als Zeichenketten auf dem CGA Bildschirm eines PCs.                       */
-/* Fuer weitergehende Formatierung oder spezielle Effekte stehen die         */
-/* Methoden der Klasse CGA_Screen zur Verfuegung.                            */
+/* Zentrale Unterbrechungsbehandlungsroutine des Systems.                    */
+/* Der Parameter gibt die Nummer des aufgetretenen Interrupts an.            */
 /*****************************************************************************/
 
-#include "device/cgastr.h"
+extern "C" void guardian(unsigned int slot);
 
-/* Hier muesst ihr selbst Code vervollstaendigen */ 
+/* GUARDIAN: Low-Level Interrupt-Behandlung. Die Funktion wird spaeter noch */
+/*           erweitert.                                                     */
+
+void guardian(unsigned int slot)
+{
+}
+

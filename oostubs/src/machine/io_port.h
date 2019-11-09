@@ -1,8 +1,3 @@
-/* $Id: io_port.h 956 2008-10-19 22:24:23Z hsc $ */
-
-#ifndef __io_port_include__
-#define __io_port_include__
-
 /*****************************************************************************/
 /* Betriebssysteme                                                           */
 /*---------------------------------------------------------------------------*/
@@ -18,47 +13,28 @@
 /* den.                                                                      */
 /*****************************************************************************/
 
-/* BENUTZTE FUNKTIONEN */
+#ifndef OOSTUBS_MACHINE_IOPORT_H
+#define OOSTUBS_MACHINE_IOPORT_H
 
-extern "C" void outb  (int port, int value);
-extern "C" void outw (int port, int value);
-extern "C" int inb   (int port);
-extern "C" int inw  (int port);
+#include "aux.h"
 
-/* KLASSENDEFINITION */
-
-class IO_Port
- {
-      // Kopieren erlaubt!
-
-      // Adresse im I/O-Adressraum
-      int address;
-   public:
-      IO_Port (int a) : address (a) {};
-
-      // OUTB: Byteweise Ausgabe eines Wertes ueber einen I/O-Port.
-      void outb (int val) const
-       { 
-	 ::outb (address, val); 
-       };
-
-      // OUTW: Wortweise Ausgabe eines Wertes ueber einen I/O-Port.
-      void outw (int val) const
-       { 
-	 ::outw (address, val); 
-       };
-
-      // INB: Byteweises Einlesen eines Wertes ueber einen I/O-Port.
-      int inb () const
-       { 
-	 return ::inb (address); 
-       };
-
-      // INW: Wortweises Einlesen eines Wertes ueber einen I/O-Port.
-      int inw () const
-       { 
-	 return ::inw (address); 
-       };
- };
+namespace oostubs
+{
+	class IO_Port
+	{
+		public:
+			IO_Port(uint16_t a) : mAddress(a) { };
+			IO_Port(Port p) : mAddress(static_cast<uint16_t>(p)) { }
+	
+			void outb(uint8_t) const;
+			void outw(uint16_t) const;
+			uint8_t inb() const;
+			uint16_t inw() const;
+		
+		private:
+			// Adresse im I/O-Adressraum
+			uint16_t mAddress;
+	};
+}
 
 #endif

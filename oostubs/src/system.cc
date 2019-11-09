@@ -2,23 +2,32 @@
 /* Betriebssysteme                                                           */
 /*---------------------------------------------------------------------------*/
 /*                                                                           */
-/*                              G U A R D I A N                              */
+/*                         A P P L I C A T I O N                             */
 /*                                                                           */
 /*---------------------------------------------------------------------------*/
-/* Zentrale Unterbrechungsbehandlungsroutine des Systems.                    */
-/* Der Parameter gibt die Nummer des aufgetretenen Interrupts an.            */
 /*****************************************************************************/
 
-/* INCLUDES */
+#include "system.h"
 
-/* FUNKTIONEN */
-               
-extern "C" void guardian (unsigned int slot);
+#include "machine/cga_screen.h"
+#include "device/cga_stream.h"
 
-/* GUARDIAN: Low-Level Interrupt-Behandlung. Die Funktion wird spaeter noch */
-/*           erweitert.                                                     */
+namespace oostubs {
+         
+void SystemImpl::run(void)
+{
+	CGAScreen screen;
 
-void guardian (unsigned int slot)
- {
- 
- }
+	for(int j = 0 ; true ; ++j)
+	{
+		screen.puts("Hello, World!");
+
+		if(j >= 5 * 23)
+		for(uint i = ((uint)-1) / 20 ; i ; --i)
+		{
+		}
+	}
+}
+
+}
+

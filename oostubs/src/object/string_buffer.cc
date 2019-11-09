@@ -13,6 +13,5 @@
 /* Methode, die von den abgeleiteten Klassen definiert werden muss.          */
 /*****************************************************************************/
 
-#include "object/strbuf.h"
+#include "object/string_buffer.h"
 
-/* Hier muesst ihr selbst Code vervollstaendigen */ 

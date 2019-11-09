@@ -2,25 +2,18 @@
 /* Betriebssysteme                                                           */
 /*---------------------------------------------------------------------------*/
 /*                                                                           */
-/*                         A P P L I C A T I O N                             */
+/*                         C G A _ S T R E A M                               */
 /*                                                                           */
 /*---------------------------------------------------------------------------*/
-/* Die Klasse Application definiert die einzige Anwendung von OO-Stubs.      */
+/* Die Klasse CGA_Stream ermoeglicht die Ausgabe verschiedener Datentypen    */
+/* als Zeichenketten auf dem CGA Bildschirm eines PCs.                       */
+/* Fuer weitergehende Formatierung oder spezielle Effekte stehen die         */
+/* Methoden der Klasse CGA_Screen zur Verfuegung.                            */
 /*****************************************************************************/
 
-/* INCLUDES */
+#include "device/cga_stream.h"
 
-#include "user/appl.h"
-#include "device/cgastr.h"
-/* Hier muesst ihr selbst Code vervollstaendigen */         
-         
-/* GLOBALE VARIABLEN */
+namespace oostubs {
 
-extern CGA_Stream kout;
-/* Hier muesst ihr selbst Code vervollstaendigen */ 
-         
-void Application::action ()
- {
-/* Hier muesst ihr selbst Code vervollstaendigen */ 
- 
- }
+}
+

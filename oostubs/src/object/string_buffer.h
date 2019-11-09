@@ -13,15 +13,14 @@
 /* Methode, die von den abgeleiteten Klassen definiert werden muss.          */
 /*****************************************************************************/
 
-#ifndef __strbuf_include__
-#define __strbuf_include__
+#ifndef OOSTUBS_OBJECT_STRINGBUFFER_H
+#define OOSTUBS_OBJECT_STRINGBUFFER_H
 
-class Stringbuffer
- {
-private:
-      Stringbuffer(const Stringbuffer &copy); // Verhindere Kopieren
-
-/* Hier muesst ihr selbst Code vervollstaendigen */     
- };
+class StringBuffer
+{
+	private:
+		StringBuffer(const StringBuffer&) = delete;
+};
 
 #endif
+

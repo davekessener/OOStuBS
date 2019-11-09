@@ -19,19 +19,24 @@
 # -----------------------------------------------------------------------------
 # Liste der Quelltexte:
 
-STARTUP_SOURCE = ./startup.asm
-CC_SOURCES = $(shell find . -name "*.cc")
-C_SOURCES = $(shell find . -name "*.c")
-ASM_SOURCES = $(shell find ./machine -name "*.asm")
+SRC_DIR = src
+BIN_DIR = bin
+DEP_DIR = dep
+ISO_DIR = iso
+
+STARTUP_SOURCE = startup.s
+CC_SOURCES = $(shell find $(SRC_DIR) -name "*.cc")
+C_SOURCES = $(shell find $(SRC_DIR) -name "*.c")
+ASM_SOURCES = $(shell find $(SRC_DIR) -name "*.s")
 
 # Einstellungen in Abhaengigkeit vom Generierungssystem:
 #
 #    ASMOBJFORMAT: Ausgabeformat fuer den Assembler. Das Format muss dem
 #                  jeweiligen Format des verwendeten C++ Compilers angepasst
 #                  werde, damit gemischte Objektdateien gelinkt werden koennen.
-#    OBJDIR:       Verzeichnis, in dem die Objektdateien abgelegt werden
+#    BIN_DIR:      Verzeichnis, in dem die Objektdateien abgelegt werden
 #                  sollen.
-#    DEPDIR:       Verzeichnis, in dem die Abhaengigkeitsdateien abgelegt werden
+#    DEP_DIR:       Verzeichnis, in dem die Abhaengigkeitsdateien abgelegt werden
 #                  sollen
 #    DRIVE_HD:     Festplatten-/USB-Device, auf das das System-Image
 #                  geschrieben wird (Target: bootdisk)
@@ -45,18 +50,16 @@ ASM_SOURCES = $(shell find ./machine -name "*.asm")
 
 VERBOSE = @
 ASMOBJFORMAT = elf64
-OBJDIR = ./build
-DEPDIR = ./dep
 # ACHTUNG: ein falsch angegebenes Laufwerk kann dazu fuehren, dass Daten auf dem
 # spezifizierten Laufwerk verloren gehen! Nicht mit root-Rechten ausfuehren!
-DRIVE_HD = /dev/sdz
+#DRIVE_HD = /dev/sdz
 DELETE = rm
 ASM = nasm
 QEMU ?= qemu-system-x86_64
 CC ?= gcc
 CXX ?= g++
-CFLAGS := $(CFLAGS) -m64 -mno-red-zone -Wall -Wno-write-strings -fno-stack-protector -nostdlib -I. -g #-DDEBUG
-CXXFLAGS := $(CFLAGS) -Wno-non-virtual-dtor -fno-threadsafe-statics -fno-use-cxa-atexit -fno-rtti -fno-exceptions
+CFLAGS := $(CFLAGS) -m64 -mno-red-zone -Wall -Wno-write-strings -fno-stack-protector -nostdlib -I $(SRC_DIR) -g #-DDEBUG
+CXXFLAGS := $(CFLAGS) -Wall -Wno-non-virtual-dtor -fno-threadsafe-statics -fno-use-cxa-atexit -fno-rtti -fno-exceptions
 
 ifneq ($(shell which grub-mkrescue 2> /dev/null),)
 MKRESCUE = grub-mkrescue
@@ -73,49 +76,49 @@ VPATH = $(sort $(dir $(STARTUP_SOURCE) $(CC_SOURCES) $(C_SOURCES) $(ASM_SOURCES)
 # -------------------------------------------------------------------------
 # Listen mit den Objektdateien, die beim Kompilieren entstehen:
 
-FIRST_OBJECT = $(addprefix $(OBJDIR)/,$(patsubst %.asm,_%.o, $(notdir $(STARTUP_SOURCE))))
-C_OBJECTS = $(notdir $(C_SOURCES:.c=.o))
-CC_OBJECTS = $(notdir $(CC_SOURCES:.cc=.o))
+FIRST_OBJECT = $(addprefix $(BIN_DIR)/,$(patsubst %.s,%.s.o, $(STARTUP_SOURCE)))
+C_OBJECTS = $(addsuffix .o,$(C_SOURCES:$(SRC_DIR)/%=%))
+CC_OBJECTS = $(addsuffix .o,$(CC_SOURCES:$(SRC_DIR)/%=%))
 
-DEP_FILES = $(patsubst %.o,$(DEPDIR)/%.d,$(C_OBJECTS))
-DEP_FILES += $(patsubst %.o,$(DEPDIR)/%.d,$(CC_OBJECTS))
+DEP_FILES = $(patsubst %.o,$(DEP_DIR)/%.d,$(C_OBJECTS))
+DEP_FILES += $(patsubst %.o,$(DEP_DIR)/%.d,$(CC_OBJECTS))
 
-ASM_OBJECTS = $(patsubst %.asm,_%.o, $(notdir $(ASM_SOURCES)))
-OBJPRE = $(addprefix $(OBJDIR)/,$(ASM_OBJECTS) $(C_OBJECTS) $(CC_OBJECTS))
+ASM_OBJECTS = $(patsubst %.s,%.s.o, $(ASM_SOURCES))
+OBJPRE = $(addprefix $(BIN_DIR)/,$(ASM_OBJECTS) $(C_OBJECTS) $(CC_OBJECTS))
 
 # --------------------------------------------------------------------------
 # Default target: Das Image fuer USB-Sticks und QEMU
 
-all: $(OBJDIR)/bootdisk.iso
-	cp $(OBJDIR)/bootdisk.iso ~/shared/
+all: bootdisk.iso
+	cp bootdisk.iso ~/shared/
 
 # --------------------------------------------------------------------------
 # Regeln zur Erzeugung der Abhaengigkeitsdateien
 
-$(DEPDIR)/%.d : %.c
+$(DEP_DIR)/%.c.d : %.c
 	@echo "DEP		$@"
 	@if test \( ! \( -d $(@D) \) \) ;then mkdir -p $(@D);fi
-	$(VERBOSE) $(CC) $(CFLAGS) -MM -MT $(OBJDIR)/$*.o -MF $@ $<
+	$(VERBOSE) $(CC) $(CFLAGS) -MM -MT $(BIN_DIR)/$*.c.o -MF $@ $<
 
-$(DEPDIR)/%.d : %.cc
+$(DEP_DIR)/%.cc.d : %.cc
 	@echo "DEP		$@"
 	@if test \( ! \( -d $(@D) \) \) ;then mkdir -p $(@D);fi
-	$(VERBOSE) $(CXX) $(CXXFLAGS) -MM -MT $(OBJDIR)/$*.o -MF $@ $<
+	$(VERBOSE) $(CXX) $(CXXFLAGS) -MM -MT $(BIN_DIR)/$*.cc.o -MF $@ $<
 
 # --------------------------------------------------------------------------
 # Regeln zur Erzeugung der Objektdateien
 
-$(OBJDIR)/%.o : %.c
+$(BIN_DIR)/%.c.o : %.c
 	@echo "CC		$@"
 	@if test \( ! \( -d $(@D) \) \) ;then mkdir -p $(@D);fi
 	$(VERBOSE) $(CC) -c $(CFLAGS) -o $@ $<
 
-$(OBJDIR)/%.o : %.cc
+$(BIN_DIR)/%.cc.o : %.cc
 	@echo "CXX		$@"
 	@if test \( ! \( -d $(@D) \) \) ;then mkdir -p $(@D);fi
 	$(VERBOSE) $(CXX) -c $(CXXFLAGS) -o $@ $<
 
-$(OBJDIR)/_%.o : %.asm
+$(BIN_DIR)/%.s.o : %.s
 	@echo "ASM		$@"
 	@if test \( ! \( -d $(@D) \) \) ;then mkdir -p $(@D);fi
 	$(VERBOSE) $(ASM) -f $(ASMOBJFORMAT) -o $@ $<
@@ -123,10 +126,10 @@ $(OBJDIR)/_%.o : %.asm
 # --------------------------------------------------------------------------
 # Gelinktes System
 
-$(OBJDIR)/system: $(FIRST_OBJECT) $(OBJPRE)
+$(BIN_DIR)/system: $(FIRST_OBJECT) $(OBJPRE)
 	@echo "LD		$@"
 	@if test \( ! \( -d $(@D) \) \) ;then mkdir -p $(@D);fi
-	$(VERBOSE) $(CXX) $(CXXFLAGS) -static -z max-page-size=0x1000 -e startup -T sections -o $(OBJDIR)/system $(FIRST_OBJECT) $(OBJPRE)
+	$(VERBOSE) $(CXX) $(CXXFLAGS) -static -z max-page-size=0x1000 -e startup -T sections -o $(BIN_DIR)/system $(FIRST_OBJECT) $(OBJPRE)
 
 # --------------------------------------------------------------------------
 # 'bootdisk.iso' besteht aus dem System und einem Bootloader (GRUB) mit
@@ -134,28 +137,23 @@ $(OBJDIR)/system: $(FIRST_OBJECT) $(OBJPRE)
 # es sich nicht um den Wechsel in den Protected Mode oder den Setup aus dem
 # BIOS heraus kuemmern muss.
 
-$(OBJDIR)/bootdisk.iso : $(OBJDIR)/system
+bootdisk.iso : $(BIN_DIR)/system
 	@echo "BUILD		$@"
 	@if test \( ! \( -d $(@D) \) \) ;then mkdir -p $(@D);fi
-	$(VERBOSE) cp $< isofiles/boot/system
-	$(VERBOSE) $(MKRESCUE) -o $@ isofiles
+	$(VERBOSE) cp $< $(ISO_DIR)/boot/system
+	$(VERBOSE) $(MKRESCUE) -o $@ $(ISO_DIR) > $(BIN_DIR)/mk_log.txt
 
 # --------------------------------------------------------------------------
 # 'clean' loescht das generierte System, die Objektdateien und die
 # Abhaengigkeitsdateien
 
 clean:	
-	@echo "RM		$(OBJDIR)"
-	$(VERBOSE) rm -rf $(OBJDIR)
-	@echo "RM		$(DEPDIR)"
-	$(VERBOSE) rm -rf $(DEPDIR)
-
-# --------------------------------------------------------------------------
-# 'vorgabe%' importiert neue Dateien aus einer Vorgabe (2 bis 7) in das
-# Arbeitsverzeichnis, so dass mit der naechsten Aufgabe begonnen werden kann.
-vorgabe%:
-	@echo "EXTRACT         /home/bsb/vorgaben/$@.tar.gz"
-	$(VERBOSE) tar --strip-components=1 --keep-old-files -xvf /home/bsb/vorgaben/$@.tar.gz
+	@echo "RM		$(BIN_DIR)"
+	$(VERBOSE) rm -rf $(BIN_DIR)
+	@echo "RM		$(DEP_DIR)"
+	$(VERBOSE) rm -rf $(DEP_DIR)
+	@echo "RM       bootdisk.iso"
+	$(VERBOSE) rm -f bootdisk.iso
 
 # --------------------------------------------------------------------------
 # 'bootdisk' erzeugt zunaechst das System, falls das noch nicht geschehen ist.
@@ -164,29 +162,29 @@ vorgabe%:
 # ACHTUNG: ein falsch angegebenes Laufwerk kann dazu fuehren, dass Daten auf dem
 # spezifizierten Laufwerk verloren gehen! Nicht mit root-Rechten ausfuehren!
 
-bootdisk: $(OBJDIR)/bootdisk.iso
+bootdisk: bootdisk.iso
 	@echo "CP		$<"
 	$(VERBOSE) cp $< $(DRIVE_HD)
 
 # --------------------------------------------------------------------------
 # 'qemu' ruft den qemu-Emulator mit dem System auf.
 
-qemu: $(OBJDIR)/bootdisk.iso
-	$(QEMU) -drive file=build/bootdisk.iso,format=raw -k en-us
+qemu: bootdisk.iso
+	$(QEMU) -drive file=bootdisk.iso,format=raw -k en-us
 
 # --------------------------------------------------------------------------
 # 'qemu-smp' ruft den qemu-Emulator mit SMP-Support und 2 CPUs mit dem System auf.
 
-qemu-smp: $(OBJDIR)/bootdisk.iso
-	$(QEMU) -drive file=build/bootdisk.iso,format=raw -k en-us -smp 2
+qemu-smp: bootdisk.iso
+	$(QEMU) -drive file=bootdisk.iso,format=raw -k en-us -smp 2
 
 # --------------------------------------------------------------------------
 # 'qemu-gdb' ruft den qemu-Emulator mit aktiviertem GDB-Stub mit dem System
 # auf, sodass es per GDB oder DDD inspiziert werden kann.
 
-qemu-gdb: $(OBJDIR)/bootdisk.iso
+qemu-gdb: bootdisk.iso
 	$(VERBOSE) echo "target remote localhost:$(shell echo $$(( $$(id -u) + 1023 )))" > /tmp/gdbcommands.$(shell id -u)
-	$(QEMU) -drive file=build/bootdisk.iso,format=raw -k en-us -gdb tcp::$(shell echo $$(( $$(id -u) + 1023 )))
+	$(QEMU) -drive file=bootdisk.iso,format=raw -k en-us -gdb tcp::$(shell echo $$(( $$(id -u) + 1023 )))
 
 # --------------------------------------------------------------------------
 # 'gdb' startet den GDB-Debugger und verbindet sich mit dem GDB-Stub des vorher
@@ -197,14 +195,14 @@ qemu-gdb: $(OBJDIR)/bootdisk.iso
 # Long Mode gewechselt ist -- ein Start mit `qemu -S` ist nicht moeglich.
 
 gdb:
-	gdb -x /tmp/gdbcommands.$(shell id -u) $(OBJDIR)/system
+	gdb -x /tmp/gdbcommands.$(shell id -u) $(BIN_DIR)/system
 
 # --------------------------------------------------------------------------
 # 'ddd' startet den DDD-Debugger und verbindet sich mit dem GDB-Stub des vorher
 # gestarteten QEMU.
 
 ddd:
-	ddd --gdb -x /tmp/gdbcommands.$(shell id -u) $(OBJDIR)/system
+	ddd --gdb -x /tmp/gdbcommands.$(shell id -u) $(BIN_DIR)/system
 
 # --------------------------------------------------------------------------
 # Einbindung der Abhaengigkeitsdateien
@@ -214,3 +212,4 @@ ifneq ($(MAKECMDGOALS),clean)
 endif
 
 .PHONY: clean bootdisk gdb ddd qemu qemu-smp qemu-gdb
+
