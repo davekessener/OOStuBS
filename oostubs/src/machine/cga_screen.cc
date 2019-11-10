@@ -41,16 +41,32 @@ void CGAScreen::getCursor(uint *x, uint *y)
 
 void CGAScreen::putc_impl(char c, attrib_t a)
 {
-	CGA_SCREEN[mPosX + mPosY * WIDTH] = (a << 8) | c;
-
-	if(++mPosX == WIDTH)
+	switch(c)
 	{
-		mPosX = 0;
+		case '\n':
+			mPosX = 0;
 
-		if(++mPosY == HEIGHT)
-		{
-			scroll();
-		}
+			if(++mPosY == HEIGHT)
+			{
+				scroll();
+			}
+
+			break;
+
+		default:
+			CGA_SCREEN[mPosX + mPosY * WIDTH] = (a << 8) | c;
+		
+			if(++mPosX == WIDTH)
+			{
+				mPosX = 0;
+		
+				if(++mPosY == HEIGHT)
+				{
+					scroll();
+				}
+			}
+
+			break;
 	}
 }
 
@@ -65,6 +81,18 @@ void CGAScreen::puts_n(char *s, int n, attrib_t a)
 	while(*s && (n == -1 || --n))
 	{
 		putc_impl(*s++, a);
+	}
+
+	update();
+}
+
+void CGAScreen::wputs_n(uint16_t *s, uint n)
+{
+	while(n--)
+	{
+		uint16_t c = *s++;
+
+		putc_impl(c & 0xFF, (c >> 8) & 0xFF);
 	}
 
 	update();

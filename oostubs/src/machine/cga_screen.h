@@ -66,6 +66,7 @@ namespace oostubs
 			void putc(char, attrib_t = DEFAULT_ATTRIBUTE);
 			void puts_n(char *, int, attrib_t = DEFAULT_ATTRIBUTE);
 			void puts(char *s, attrib_t a = DEFAULT_ATTRIBUTE) { puts_n(s, -1, a); }
+			void wputs_n(uint16_t *, uint);
 			void scroll( );
 
 		private:

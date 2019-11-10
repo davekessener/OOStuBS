@@ -9,20 +9,24 @@
 
 #include "system.h"
 
-#include "machine/cga_screen.h"
 #include "device/cga_stream.h"
 
 namespace oostubs {
          
 void SystemImpl::run(void)
 {
-	CGAScreen screen;
+	io::CGAStream os;
+
+	uint8_t c = 1;
 
 	for(int j = 0 ; true ; ++j)
 	{
-		screen.puts("Hello, World!");
+		os << io::set_foreground(static_cast<CGAScreen::Color>(c))
+		   << "Hello, World!"
+		   << io::endl;
 
-		if(j >= 5 * 23)
+		++c;
+
 		for(uint i = ((uint)-1) / 20 ; i ; --i)
 		{
 		}

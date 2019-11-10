@@ -13,7 +13,17 @@
 
 #include "device/cga_stream.h"
 
-namespace oostubs {
+namespace oostubs { namespace io {
 
+void CGAStream::doFlush(void)
+{
+	mScreen.wputs_n(data(), size());
 }
+
+void CGAStream::doPutc(Super::value_type c)
+{
+	Super::doPutc((mAttrib << 8) | c);
+}
+
+}}
 
