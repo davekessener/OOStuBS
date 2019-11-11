@@ -85,11 +85,9 @@ namespace oostubs
 			template<typename T>
 			T *OneshotCreationPolicy<T>::create(void)
 			{
-				static uint8_t space[sizeof(T)];
+				static T sInstance;
 
-				new(space) T;
-
-				return reinterpret_cast<T *>(space);
+				return &sInstance;
 			}
 
 			template<typename T>

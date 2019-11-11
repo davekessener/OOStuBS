@@ -424,7 +424,7 @@ delay:
 ;
 
 __cxa_pure_virtual: ; "virtual" Methode ohne Implementierung aufgerufen
-_ZdlPv:             ; void operator delete(void*)
+;_ZdlPv:             ; void operator delete(void*)
 _ZdlPvj:            ; void operator delete(void*, unsigned int) fuer g++ 6.x
 _ZdlPvm:            ; void operator delete(void*, unsigned long) fuer g++ 6.x
 	ret

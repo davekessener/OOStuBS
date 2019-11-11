@@ -1,5 +1,16 @@
 #include "utils/shutdown_service.h"
 
+extern "C" {
+
+int atexit(void (*f)(void))
+{
+	oostubs::ShutdownService::instance().register_callback(f);
+
+	return 0;
+}
+
+}
+
 namespace oostubs {
 
 ShutdownService *ShutdownService::sInstance = nullptr;

@@ -7,7 +7,7 @@
 #include <stdint.h>
 
 typedef unsigned uint;
-typedef unsigned long size_t;
+typedef decltype(sizeof(0)) size_t;
 
 namespace oostubs
 {

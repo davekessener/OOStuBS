@@ -196,7 +196,7 @@ namespace oostubs
 			os.width(sizeof(p) * 2);
 			os.fill('0');
 
-			os << static_cast<unsigned long>(p);
+			os << reinterpret_cast<unsigned long>(p);
 
 			os.format(fmt);
 			os.width(w);
