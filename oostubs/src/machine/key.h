@@ -57,9 +57,9 @@ namespace oostubs
 			void invalidate() { mScan = 0; }
 			
 			// ASCII, SCANCODE: Setzen und Abfragen von Ascii und Scancode
-			void ascii(uint8_t a) { mAscii = a; }
+			void ascii(char a) { mAscii = a; }
 			void scancode(uint8_t s) { mScan = s; }
-			uint8_t ascii() { return mAscii; }
+			char ascii() { return mAscii; }
 			uint8_t scancode() { return mScan; }
 			
 			// Funktionen zum Setzen und Loeschen von SHIFT, ALT, CTRL usw.
@@ -102,7 +102,7 @@ namespace oostubs
 			operator char()    { return(char) mAscii; }
 	
 		private:
-			uint8_t mAscii;
+			char mAscii;
 			uint8_t mScan;
 			uint8_t mModi;
 	};

@@ -43,6 +43,22 @@ void CGAScreen::putc_impl(char c, attrib_t a)
 {
 	switch(c)
 	{
+		case '\b':
+			if(mPosX)
+			{
+				--mPosX;
+			}
+			else
+			{
+				mPosX = WIDTH - 1;
+
+				if(mPosY)
+				{
+					--mPosY;
+				}
+			}
+			break;
+
 		case '\n':
 			mPosX = 0;
 

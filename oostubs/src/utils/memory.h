@@ -3,9 +3,6 @@
 
 #include "mpl/singleton.h"
 
-void * operator new(size_t) noexcept(false);
-void operator delete(void *) noexcept;
-
 namespace oostubs
 {
 	template<size_t N>

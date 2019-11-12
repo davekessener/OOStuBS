@@ -14,15 +14,19 @@
 #include "machine/io_port.h"
 #include "machine/key.h"
 
+#include "mpl/singleton.h"
+
 namespace oostubs
 {
-	class KeyboardController
+	class KeyboardControllerImpl
 	{
 		public:
+		typedef mpl::SingletonHolder<KeyboardControllerImpl> Singleton;
+
 			// KEYBOARD_CONTROLLER: Initialisierung der Tastatur: alle LEDs werden
 			//                      ausgeschaltet und die Wiederholungsrate auf
 			//                      maximale Geschwindigkeit eingestellt.
-			KeyboardController();
+			KeyboardControllerImpl();
 			
 			// KEY_HIT: Dient der Tastaturabfrage nach dem Auftreten einer Tastatur-
 			//          unterbrechung. Wenn der Tastendruck abgeschlossen ist und
@@ -50,7 +54,7 @@ namespace oostubs
 			void set_led(char led, bool on);
 	
 		private:
-			KeyboardController(const KeyboardController &) = delete;
+			KeyboardControllerImpl(const KeyboardControllerImpl &) = delete;
 	
 			// KEY_DECODED: Interpretiert die Make und Break-Codes der Tastatur und
 			//              liefert den ASCII Code, den Scancode und Informationen
@@ -63,6 +67,9 @@ namespace oostubs
 			// GET_ASCII_CODE: ermittelt anhand von Tabellen aus dem Scancode und
 			//                 den gesetzten Modifier-Bits den ASCII Code der Taste.
 			void get_ascii_code();
+
+			void wait_for_port_empty();
+			void wait_for_ack();
 	
 		private:
 			unsigned char mCode;
@@ -80,6 +87,8 @@ namespace oostubs
 			const IO_Port mCtrlPort; // Status-(R) u. Steuerregister(W)
 			const IO_Port mDataPort; // Ausgabe-(R) u. Eingabepuffer(W)
 	};
+
+	typedef KeyboardControllerImpl::Singleton KeyboardController;
 }
 
 #endif
