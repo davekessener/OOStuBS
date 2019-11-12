@@ -58,7 +58,8 @@ ASM = nasm
 QEMU ?= qemu-system-x86_64
 CC ?= gcc
 CXX ?= g++
-CFLAGS := $(CFLAGS) -m64 -mno-red-zone -Wall -Wno-write-strings -fno-stack-protector -nostdlib -I $(SRC_DIR) -g #-DDEBUG
+USER_MACROS ?=
+CFLAGS := $(CFLAGS) -m64 -mno-red-zone -Wall -Wno-write-strings -fno-stack-protector -nostdlib -I $(SRC_DIR) -g $(USER_MACROS) #-DDEBUG
 CXXFLAGS := $(CFLAGS) -Wall -Wno-non-virtual-dtor -fno-threadsafe-statics -fno-use-cxa-atexit -fno-rtti -fno-exceptions
 
 ifneq ($(shell which grub-mkrescue 2> /dev/null),)
@@ -125,6 +126,8 @@ $(BIN_DIR)/%.s.o : %.s
 
 # --------------------------------------------------------------------------
 # Gelinktes System
+
+objects: $(OBJPRE)
 
 $(BIN_DIR)/system: $(FIRST_OBJECT) $(OBJPRE)
 	@echo "LD		$@"
@@ -211,5 +214,5 @@ ifneq ($(MAKECMDGOALS),clean)
 -include $(DEP_FILES)
 endif
 
-.PHONY: clean bootdisk gdb ddd qemu qemu-smp qemu-gdb
+.PHONY: clean bootdisk gdb ddd qemu qemu-smp qemu-gdb objects
 

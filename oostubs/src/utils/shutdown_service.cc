@@ -1,5 +1,7 @@
 #include "utils/shutdown_service.h"
 
+#ifndef NOKERNEL
+
 extern "C" {
 
 int atexit(void (*f)(void))
@@ -10,6 +12,8 @@ int atexit(void (*f)(void))
 }
 
 }
+
+#endif
 
 namespace oostubs {
 

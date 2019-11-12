@@ -1,5 +1,35 @@
 #include "machine/io_port.h"
 
+#ifdef NOKERNEL
+
+#include <string>
+
+namespace oostubs {
+
+void IO_Port::outb(uint8_t v) const
+{
+	throw std::string("outb called!");
+}
+
+void IO_Port::outw(uint16_t v) const
+{
+	throw std::string("outw called!");
+}
+
+uint8_t IO_Port::inb(void) const
+{
+	throw std::string("inb called!");
+}
+
+uint16_t IO_Port::inw(void) const
+{
+	throw std::string("inw called!");
+}
+
+}
+
+#else
+
 extern "C" void outb(int port, int value);
 extern "C" void outw(int port, int value);
 extern "C" int inb(int port);
@@ -32,4 +62,6 @@ uint16_t IO_Port::inw(void) const
 };
 
 }
+
+#endif
 

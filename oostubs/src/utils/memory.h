@@ -32,16 +32,17 @@ namespace oostubs
 		static constexpr size_t CAPACITY = N;
 
 		public:
+			SimpleMemoryManager( );
+
 			void *alloc(size_t) noexcept;
 			void free(void *) noexcept;
 
 		private:
-			SimpleMemoryManager( );
-
 			entry_t& entry(uint32_t i) { return *((entry_t *) (mBuf + i)); }
 			void *to_address(entry_t& e) { return ((uint8_t *) &e) + OVERHEAD; } 
+			uint32_t get_address(entry_t& e) { return ((uint8_t *) &e) - mBuf; }
 			uint32_t from_address(void *p) { return (((uint8_t *) p) - OVERHEAD) - mBuf; }
-			uint32_t endof(entry_t& e) { return from_address(((uint8_t *) &e) + e.size); }
+			uint32_t endof(entry_t& e) { return ((uint8_t *) &e) + e.size - mBuf; }
 
 		private:
 			uint8_t mBuf[CAPACITY];
@@ -57,15 +58,25 @@ namespace oostubs
 	{
 		entry_t& root{entry(mFirst = 0)};
 
+		for(uint i = 0 ; i < N ; ++i)
+		{
+			mBuf[i] = 0;
+		}
+
 		root.size = CAPACITY;
 		root.previous = root.next = 0;
 	}
 
 	template<size_t N>
-	void *SimpleMemoryManager<N>::alloc(size_t n)
+	void *SimpleMemoryManager<N>::alloc(size_t n) noexcept
 	{
 		entry_t& root{entry(mFirst)};
 		entry_t *e = &root;
+
+		if(n < 3 * OVERHEAD)
+		{
+			n = 3 * OVERHEAD;
+		}
 
 		while(true)
 		{
@@ -86,13 +97,18 @@ namespace oostubs
 					uint32_t a = prev->next + n + OVERHEAD;
 					entry_t *s = &entry(a);
 
+					if(mFirst == prev->next)
+					{
+						mFirst = a;
+					}
+
 					s->size = e->size - n - OVERHEAD;
 					e->size = n + OVERHEAD;
+					
+					prev->next = next->previous = a;
 
 					s->next = e->next;
 					s->previous = e->previous;
-					
-					prev->next = next->previous = a;
 
 					return to_address(*e);
 				}
@@ -110,7 +126,7 @@ namespace oostubs
 	}
 
 	template<size_t N>
-	void SimpleMemoryManager<N>::free(void *p)
+	void SimpleMemoryManager<N>::free(void *p) noexcept
 	{
 		uint32_t a = from_address(p);
 		entry_t& d{entry(a)};
@@ -120,7 +136,10 @@ namespace oostubs
 
 		do
 		{
-			if(from_address(e) == o)
+			uint32_t ea = get_address(*e);
+			uint32_t ee = endof(*e);
+
+			if(ea == o)
 			{
 				if(endof(entry(e->previous)) == a)
 				{
@@ -141,7 +160,7 @@ namespace oostubs
 					return;
 				}
 			}
-			else if(endof(*e) == a)
+			else if(ee == a)
 			{
 				if(e->next == o)
 				{
@@ -149,7 +168,7 @@ namespace oostubs
 
 					e->size += d.size + n.size;
 					e->next = n.next;
-					entry(n.next).previous = from_address(e);
+					entry(n.next).previous = ea;
 
 					return;
 				}
@@ -160,14 +179,14 @@ namespace oostubs
 					return;
 				}
 			}
-			else if((from_address(e) < a && e->next > o) || e->next < from_address(e))
+			else if((ea < a && e->next > o) || e->next < ee)
 			{
-				if(from_address(e) < a)
+				if(ea < a)
 				{
 					entry(e->next).previous = a;
 					d.next = e->next;
 					e->next = a;
-					d.previous = from_address(e);
+					d.previous = ea;
 
 					return;
 				}
@@ -176,7 +195,7 @@ namespace oostubs
 					entry(e->previous).next = a;
 					d.previous = e->previous;
 					e->previous = a;
-					d.next = from_address(e);
+					d.next = ea;
 
 					return;
 				}

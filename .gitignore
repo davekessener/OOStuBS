@@ -2,4 +2,6 @@ oostubs/bootdisk.iso
 oostubs/bin/
 oostubs/dep/
 **/.*.swp
+**/*.d
+**/*.o
 
