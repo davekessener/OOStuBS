@@ -26,12 +26,6 @@ struct kbd_cmd
 };
 enum { cpu_reset = 0xfe };
 
-// Namen der LEDs
-struct led
-{
-	enum { caps_lock = 4, num_lock = 2, scroll_lock = 1 };
-};
-
 // Antworten der Tastatur
 struct kbd_reply
 {
@@ -190,12 +184,12 @@ bool KeyboardControllerImpl::key_decoded(void)
 
 		case 58:
 			mGather.caps_lock(!mGather.caps_lock());
-			set_led(led::caps_lock, mGather.caps_lock());
+			set_led(KeyboardData::LED::CAPS_LOCK, mGather.caps_lock());
 			break;
 
 		case 70:
 			mGather.scroll_lock(!mGather.scroll_lock());
-			set_led(led::scroll_lock, mGather.scroll_lock());
+			set_led(KeyboardData::LED::SCROLL_LOCK, mGather.scroll_lock());
 			break;
 
 		case 69: // Numlock oder Pause ?
@@ -213,7 +207,7 @@ bool KeyboardControllerImpl::key_decoded(void)
 			else // NumLock
 			{
 				mGather.num_lock(!mGather.num_lock());
-				set_led(led::num_lock, mGather.num_lock());
+				set_led(KeyboardData::LED::NUM_LOCK, mGather.num_lock());
 			}
 			break;
 			
@@ -304,9 +298,9 @@ KeyboardControllerImpl::KeyboardControllerImpl(void)
 	: mCtrlPort(0x64), mDataPort(0x60)
 {
 	// alle LEDs ausschalten(bei vielen PCs ist NumLock nach dem Booten an)
-	set_led(led::caps_lock, false);
-	set_led(led::scroll_lock, false);
-	set_led(led::num_lock, false);
+	set_led(KeyboardData::LED::CAPS_LOCK, false);
+	set_led(KeyboardData::LED::SCROLL_LOCK, false);
+	set_led(KeyboardData::LED::NUM_LOCK, false);
 	
 	// maximale Geschwindigkeit, minimale Verzoegerung
 	set_repeat_rate(0, 0);  
@@ -368,7 +362,7 @@ void KeyboardControllerImpl::set_repeat_rate(int speed, int delay)
 
 // SET_LED: setzt oder loescht die angegebene Leuchtdiode
 
-void KeyboardControllerImpl::set_led(char led, bool on)
+void KeyboardControllerImpl::set_led(KeyboardData::LED led, bool on)
 {
 	wait_for_port_empty();
 
@@ -376,7 +370,8 @@ void KeyboardControllerImpl::set_led(char led, bool on)
 
 	wait_for_ack();
 
-	mLEDs = (mLEDs & ~led) | (on ? led : 0);
+	uint8_t bm = static_cast<uint8_t>(led);
+	mLEDs = (mLEDs & ~bm) | (on ? bm : 0);
 
 	mDataPort.outb(mLEDs);
 

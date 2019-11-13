@@ -25,6 +25,12 @@ CGAScreen::CGAScreen(void)
 	, mControlPort(Port::CGA_CTRL)
 	, mDataPort(Port::CGA_DATA)
 {
+	for(uint16_t *i1 = CGA_SCREEN, *i2 = CGA_SCREEN + WIDTH * HEIGHT ; i1 != i2 ; ++i1)
+	{
+		*i1 = 0;
+	}
+
+	update();
 }
 
 void CGAScreen::setCursor(uint x, uint y)

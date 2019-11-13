@@ -18,6 +18,16 @@
 
 namespace oostubs
 {
+	struct KeyboardData
+	{
+		enum class LED : uint8_t
+		{
+			SCROLL_LOCK = 1,
+			NUM_LOCK = 2,
+			CAPS_LOCK = 4
+		};
+	};
+
 	class KeyboardControllerImpl
 	{
 		public:
@@ -51,7 +61,9 @@ namespace oostubs
 			void set_repeat_rate(int speed, int delay);
 			
 			// SET_LED: setzt oder loescht die angegebene Leuchtdiode.
-			void set_led(char led, bool on);
+			void set_led(KeyboardData::LED, bool);
+
+			bool get_led(KeyboardData::LED led) const { return mLEDs & static_cast<uint8_t>(led); }
 	
 		private:
 			KeyboardControllerImpl(const KeyboardControllerImpl &) = delete;
@@ -75,7 +87,7 @@ namespace oostubs
 			unsigned char mCode;
 			unsigned char mPrefix;
 			Key mGather;
-			char mLEDs;
+			uint8_t mLEDs;
 			
 			static unsigned char normal_tab[];
 			static unsigned char shift_tab[];
