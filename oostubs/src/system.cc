@@ -24,8 +24,8 @@ int testf(int a, int b) { return a + b * b; }
 
 struct Test
 {
-	Test() { kout << "Constuctor\n"; }
-	~Test() { kout << "Destructor\n"; }
+	Test() { kout << "Constuctor " << this << "\n"; }
+	~Test() { kout << "Destructor " << this << "\n"; }
 };
 
 Key getc()
@@ -47,6 +47,22 @@ void update_line(const char *s)
 	while(*s) { kout << *s++; ++c; }
 	kout << ' ';
 	for(uint i = 0 ; i < c + 1 ; ++i) { kout << '\b'; }
+}
+
+void toggle_key_speed(void)
+{
+	static bool fast = false;
+
+	KeyboardController::instance().set_repeat_rate((fast ? 0 : 31), (fast ? 0 : 3));
+
+	Screen::instance().putc_at(
+		CGAScreen::WIDTH - 1, 0,
+		(fast ? 'F' : 'S'),
+		CGAScreen::attribute(
+			CGAScreen::Color::BLACK,
+			(fast ? CGAScreen::Color::GREEN : CGAScreen::Color::RED)));
+
+	fast = !fast;
 }
 
 void SystemImpl::run(void)
@@ -84,6 +100,8 @@ void SystemImpl::run(void)
 //		}
 	}
 
+	toggle_key_speed();
+
 	kout << io::set_foreground(Color::WHITE)
 		 << io::set_background(Color::BLACK)
 		 << "\n> "
@@ -102,6 +120,7 @@ void SystemImpl::run(void)
 				switch(k.scancode())
 				{
 					case Key::scan_code::UP:
+						toggle_key_speed();
 						break;
 
 					case Key::scan_code::DOWN:

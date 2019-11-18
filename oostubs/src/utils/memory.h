@@ -150,9 +150,24 @@ namespace oostubs
 				}
 				else
 				{
-					entry(e->previous).next = a;
 					d.size += e->size;
-					entry(e->next).previous = e->previous;
+
+					if(ea != e->next)
+					{
+						d.previous = e->previous;
+						d.next = e->next;
+						entry(d.previous).next = a;
+						entry(d.next).previous = a;
+					}
+					else
+					{
+						d.next = d.previous = a;
+					}
+
+					if(ea == mFirst)
+					{
+						mFirst = a;
+					}
 
 					return;
 				}

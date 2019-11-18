@@ -11,13 +11,13 @@
 /* Methoden der Klasse CGA_Screen zur Verfuegung.                            */
 /*****************************************************************************/
 
-#include "device/cga_stream.h"
+#include "machine/cga_stream.h"
 
 namespace oostubs { namespace io {
 
 void CGAStream::doFlush(void)
 {
-	mScreen.wputs_n(data(), size());
+	Screen::instance().wputs_n(data(), size());
 }
 
 void CGAStream::doPutc(Super::value_type c)

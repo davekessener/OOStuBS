@@ -3,7 +3,7 @@
 
 #include "aux.h"
 
-#include "utils/fixed_vector.h"
+#include "lib/fixed_vector.h"
 
 namespace oostubs
 {

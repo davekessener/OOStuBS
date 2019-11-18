@@ -14,7 +14,7 @@
 #ifndef OOSTUBS_DEVICE_CGASTREAM_H
 #define OOSTUBS_DEVICE_CGASTREAM_H
 
-#include "object/o_stream.h"
+#include "lib/o_stream.h"
 
 #include "machine/cga_screen.h"
 
@@ -54,7 +54,6 @@ namespace oostubs
 				void doPutc(Super::value_type) override;
 
 			private:
-				CGAScreen mScreen;
 				attrib_t mAttrib;
 		};
 

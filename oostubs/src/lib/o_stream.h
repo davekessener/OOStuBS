@@ -19,12 +19,12 @@
 #ifndef OOSTUBS_OBJECT_OSTREAM_H
 #define OOSTUBS_OBJECT_OSTREAM_H
 
-#include "object/string_buffer.h"
+#include "lib/string_buffer.h"
 
 #include "mpl/enable_if.h"
 #include "mpl/type_list.h"
 
-#define MXT_CBUF_MAX 64
+#define MXT_CBUF_MAX (64+1)
 
 namespace oostubs
 {
@@ -255,7 +255,7 @@ namespace oostubs
 			{
 				uint d = v % base;
 
-				*--p = static_cast<char>(d + (d < 10 ? '0' : 'a'));
+				*--p = static_cast<char>(d + (d < 10 ? '0' : ('a' - 10)));
 				v /= base;
 			}
 

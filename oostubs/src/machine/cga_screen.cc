@@ -10,6 +10,8 @@
 /* schirmspeicher bzw. die I/O-Ports der Grafikkarte.                        */
 /*****************************************************************************/
 
+#include <algorithm>
+
 #include "machine/cga_screen.h"
 
 #define CGA_CURSOR_HI 0x0e
@@ -25,10 +27,7 @@ CGAScreen::CGAScreen(void)
 	, mControlPort(Port::CGA_CTRL)
 	, mDataPort(Port::CGA_DATA)
 {
-	for(uint16_t *i1 = CGA_SCREEN, *i2 = CGA_SCREEN + WIDTH * HEIGHT ; i1 != i2 ; ++i1)
-	{
-		*i1 = 0;
-	}
+	std::fill(CGA_SCREEN, CGA_SCREEN + WIDTH * HEIGHT, 0);
 
 	update();
 }
@@ -98,9 +97,14 @@ void CGAScreen::putc(char c, attrib_t a)
 	update();
 }
 
+void CGAScreen::putc_at(uint x, uint y, char c, attrib_t a)
+{
+	CGA_SCREEN[x + y * WIDTH] = (a << 8) | c;
+}
+
 void CGAScreen::puts_n(char *s, int n, attrib_t a)
 {
-	while(*s && (n == -1 || --n))
+	while((n == -1 && *s) || (n > 0 && --n))
 	{
 		putc_impl(*s++, a);
 	}

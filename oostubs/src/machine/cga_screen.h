@@ -15,6 +15,8 @@
 
 #include "machine/io_port.h"
 
+#include "mpl/singleton.h"
+
 namespace oostubs
 {
 	namespace impl
@@ -64,6 +66,7 @@ namespace oostubs
 			void setCursor(uint, uint);
 			void getCursor(uint *, uint *);
 			void putc(char, attrib_t = DEFAULT_ATTRIBUTE);
+			void putc_at(uint, uint, char, attrib_t = DEFAULT_ATTRIBUTE);
 			void puts_n(char *, int, attrib_t = DEFAULT_ATTRIBUTE);
 			void puts(char *s, attrib_t a = DEFAULT_ATTRIBUTE) { puts_n(s, -1, a); }
 			void wputs_n(uint16_t *, uint);
@@ -78,6 +81,8 @@ namespace oostubs
 			uint mPosX, mPosY;
 			IO_Port mControlPort, mDataPort;
 	};
+
+	typedef mpl::SingletonHolder<CGAScreen> Screen;
 }
 
 #endif

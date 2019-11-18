@@ -57,26 +57,32 @@ UT_SUIT("Static Memory Dealer")
 
 	UT_TEST("free")
 	{
-		data.print();
-
 		void *p1 = data.mem->alloc(25);
-		data.print();
 		void *p2 = data.mem->alloc(25);
-		data.print();
 		void *p3 = data.mem->alloc(25);
-		data.print();
 
 		UT_ASSERT_EQ(4, data.get_a(p1));
 		UT_ASSERT_EQ(4 + 25 + 4, data.get_a(p2));
 		UT_ASSERT_EQ(4 + 25 + 4 + 25 + 4, data.get_a(p3));
 
 		data.mem->free(p2);
-		data.print();
 
 		p2 = data.mem->alloc(20);
-		data.print();
 
 		UT_ASSERT_EQ(4 + 25 + 4, data.get_a(p2));
+	};
+
+	UT_TEST("re-empty")
+	{
+		data.print();
+
+		void *p = data.mem->alloc(30);
+
+		data.print();
+
+		data.mem->free(p);
+
+		data.print();
 	};
 };
 
