@@ -1,6 +1,8 @@
 #ifndef OOSTUBS_MPL_TYPELIST_H
 #define OOSTUBS_MPL_TYPELIST_H
 
+#include "mpl/utils.h"
+
 namespace oostubs
 {
 	namespace mpl
@@ -61,35 +63,6 @@ namespace oostubs
 
 		template<typename M, typename K>
 		using map_get = typename Map_Get<M, K>::Type;
-
-		template<typename T>
-		struct Decay
-		{
-			typedef T Type;
-		};
-
-		template<typename T>
-		struct Decay<const T> : Decay<T>
-		{
-		};
-
-		template<typename T>
-		struct Decay<volatile T> : Decay<T>
-		{
-		};
-
-		template<typename T>
-		struct Decay<T&> : Decay<T>
-		{
-		};
-
-		template<typename T>
-		struct Decay<T&&> : Decay<T>
-		{
-		};
-
-		template<typename T>
-		using decay = typename Decay<T>::Type;
 	}
 }
 

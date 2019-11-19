@@ -3,6 +3,7 @@
 
 #include "aux.h"
 
+#include "mpl/utils.h"
 #include "mpl/type_list.h"
 
 namespace oostubs
@@ -28,7 +29,7 @@ namespace oostubs
 
 				R operator()(A ... a)
 				{
-					return (*fn)(std::forward<A>(a)...);
+					return (*fn)(mpl::forward<A>(a)...);
 				}
 
 				fn_t fn;
@@ -69,11 +70,11 @@ namespace oostubs
 				struct ftor_impl : ftor_base<Return, A...>
 				{
 					template<typename T>
-					ftor_impl(T&& f) : ftor(std::forward<T>(f)) { }
+					ftor_impl(T&& f) : ftor(mpl::forward<T>(f)) { }
 
 					Return operator()(A ... a)
 					{
-						return ftor(std::forward<A>(a)...);
+						return ftor(mpl::forward<A>(a)...);
 					}
 
 					F ftor;
@@ -88,7 +89,7 @@ namespace oostubs
 				typedef typename ftor_build_ftor<F>::Type Super;
 
 				template<typename T>
-				ftor_ftor(T&& f) : Super(std::forward<T>(f)) { }
+				ftor_ftor(T&& f) : Super(mpl::forward<T>(f)) { }
 			};
 		}
 
@@ -98,14 +99,14 @@ namespace oostubs
 			public:
 				FTor(R (*f)(A...)) : mFun(new impl::ftor_fp<R, A...>(f)) { }
 				template<typename F>
-					FTor(F&& f) : mFun(new impl::ftor_ftor<decay<F>>(std::forward<F>(f))) { }
+					FTor(F&& f) : mFun(new impl::ftor_ftor<decay<F>>(mpl::forward<F>(f))) { }
 
 				~FTor( ) { delete mFun; }
 
 				template<typename ... T>
 				R operator()(T&& ... a)
 				{
-					return (*mFun)(std::forward<T>(a)...);
+					return (*mFun)(mpl::forward<T>(a)...);
 				}
 
 			private:

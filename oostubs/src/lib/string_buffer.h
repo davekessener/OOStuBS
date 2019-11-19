@@ -16,8 +16,6 @@
 #ifndef OOSTUBS_OBJECT_STRINGBUFFER_H
 #define OOSTUBS_OBJECT_STRINGBUFFER_H
 
-#include <string>
-
 #include "machine/cga_screen.h"
 
 namespace oostubs
@@ -37,7 +35,6 @@ namespace oostubs
 			void putc(value_type);
 			void puts(const value_type *, uint);
 			void puts(const char *s) { while(*s) putc(*s++); }
-			void puts(const std::string& s) { puts(s.data()); }
 
 		protected:
 			value_type *data( ) { return mBuffer; }

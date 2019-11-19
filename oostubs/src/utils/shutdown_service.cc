@@ -39,13 +39,13 @@ void ShutdownService::register_callback(callback_fn f, Priority p)
 	{
 		if(static_cast<uint32_t>(i1->first) > static_cast<uint32_t>(p))
 		{
-			mEntries.insert(i1, std::make_pair(p, f));
+			mEntries.insert(i1, mpl::make_pair(p, f));
 
 			return;
 		}
 	}
 
-	mEntries.emplace_back(std::make_pair(p, f));
+	mEntries.emplace_back(mpl::make_pair(p, f));
 }
 
 void ShutdownService::shutdown(void)

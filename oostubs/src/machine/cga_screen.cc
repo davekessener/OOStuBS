@@ -10,9 +10,9 @@
 /* schirmspeicher bzw. die I/O-Ports der Grafikkarte.                        */
 /*****************************************************************************/
 
-#include <algorithm>
-
 #include "machine/cga_screen.h"
+
+#include "mpl/algorithm.h"
 
 #define CGA_CURSOR_HI 0x0e
 #define CGA_CURSOR_LO 0x0f
@@ -27,7 +27,7 @@ CGAScreen::CGAScreen(void)
 	, mControlPort(Port::CGA_CTRL)
 	, mDataPort(Port::CGA_DATA)
 {
-	std::fill(CGA_SCREEN, CGA_SCREEN + WIDTH * HEIGHT, 0);
+	mpl::fill(CGA_SCREEN, CGA_SCREEN + WIDTH * HEIGHT, 0);
 
 	update();
 }

@@ -9,14 +9,16 @@
 
 #include "system.h"
 
-#include "memory.h"
-
+#include "aux.h"
 #include "io.h"
 
 #include "mpl/ftor.h"
 
 #include "machine/cga_screen.h"
 #include "machine/keyboard_controller.h"
+
+#include "lib/float.h"
+#include "lib/math.h"
 
 namespace oostubs {
 
@@ -81,7 +83,8 @@ void SystemImpl::run(void)
 	uint8_t fg = 1, bg = 0;
 
 	kout << "f1(3, 7) = " << f1(3, 7) << "\n"
-	     << "f2(3, 7) = " << f2(3, 7) << io::endl;
+	     << "f2(3, 7) = " << f2(3, 7) << "\n"
+		 << "sqrt(2)  = " << sqrt<double>(2) << io::endl;
 
 	for(int j = 0 ; j < 4 ; ++j)
 	{

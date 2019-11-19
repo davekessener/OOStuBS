@@ -1,13 +1,17 @@
 #ifndef OOSTUBS_AUX_H
 #define OOSTUBS_AUX_H
 
-#include <utility>
-#include <new>
-
 #include <stdint.h>
+
+#define double ::oostubs::Double
 
 typedef unsigned uint;
 typedef decltype(sizeof(0)) size_t;
+
+inline void *operator new(size_t, void *p)
+{
+	return p;
+}
 
 namespace oostubs
 {

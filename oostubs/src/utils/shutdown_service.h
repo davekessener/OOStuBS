@@ -5,6 +5,9 @@
 
 #include "lib/fixed_vector.h"
 
+#include "mpl/utils.h"
+#include "mpl/pair.h"
+
 namespace oostubs
 {
 	class ShutdownService
@@ -20,8 +23,8 @@ namespace oostubs
 		};
 
 		private:
-		typedef void (*callback_fn)(void); // TODO support ftors
-		typedef std::pair<Priority, callback_fn> entry_t;
+		typedef void (*callback_fn)(void);
+		typedef mpl::Pair<Priority, callback_fn> entry_t;
 
 		public:
 			static ShutdownService& instance( );
@@ -35,7 +38,7 @@ namespace oostubs
 			static ShutdownService *sInstance;
 
 		private:
-			utils::FixedVector<10, entry_t> mEntries;
+			FixedVector<10, entry_t> mEntries;
 	};
 }
 
