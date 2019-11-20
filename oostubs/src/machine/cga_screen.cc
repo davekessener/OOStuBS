@@ -36,6 +36,8 @@ void CGAScreen::setCursor(uint x, uint y)
 {
 	mPosX = x;
 	mPosY = y;
+
+	update();
 }
 
 void CGAScreen::getCursor(uint *x, uint *y)
@@ -132,7 +134,7 @@ void CGAScreen::scroll(void)
 
 	while(dst != end)
 	{
-		*dst++ = (src >= end ? 0 : *src++);
+		*dst++ = (src >= end ? (DEFAULT_ATTRIBUTE << 8) : *src++);
 	}
 
 	if(mPosY > 0)

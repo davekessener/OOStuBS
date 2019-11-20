@@ -398,8 +398,6 @@ Key KeyboardControllerImpl::key_hit(void)
 
 		if(key_decoded())
 		{
-			get_ascii_code();
-
 			r = mGather;
 			mGather = {};
 		}
