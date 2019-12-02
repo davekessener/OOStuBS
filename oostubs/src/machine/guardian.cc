@@ -9,12 +9,20 @@
 /* Der Parameter gibt die Nummer des aufgetretenen Interrupts an.            */
 /*****************************************************************************/
 
+#include "aux.h"
+
 extern "C" void guardian(unsigned int slot);
 
-/* GUARDIAN: Low-Level Interrupt-Behandlung. Die Funktion wird spaeter noch */
-/*           erweitert.                                                     */
+namespace oostubs {
+
+void guardian_impl(uint slot)
+{
+}
+
+}
 
 void guardian(unsigned int slot)
 {
+	oostubs::guardian_impl(slot);
 }
 

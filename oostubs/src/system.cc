@@ -16,6 +16,8 @@
 
 #include "machine/cga_screen.h"
 #include "machine/keyboard_controller.h"
+#include "machine/pic.h"
+#include "machine/cpu.h"
 
 #include "lib/float.h"
 #include "lib/math.h"
@@ -71,6 +73,10 @@ void SystemImpl::run(void)
 {
 	typedef CGAScreen::Color Color;
 
+	PICManager::instance().enable(PIC::Device::KEYBOARD);
+
+	CPUManager::instance().enable_int();
+
 	typedef mpl::FTor<int, int, int> f_t;
 
 	Test *ptest = new Test[3];
@@ -102,6 +108,8 @@ void SystemImpl::run(void)
 //		{
 //		}
 	}
+
+	while(true);
 
 	toggle_key_speed();
 

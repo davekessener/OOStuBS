@@ -30,6 +30,9 @@ namespace oostubs
 			void outw(uint16_t) const;
 			uint8_t inb() const;
 			uint16_t inw() const;
+
+			uint16_t address( ) const { return mAddress; }
+			uint16_t port( ) const { return address(); }
 		
 		private:
 			// Adresse im I/O-Adressraum
