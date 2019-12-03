@@ -6,6 +6,7 @@
 #include "machine/cga_screen.h"
 #include "machine/cpu.h"
 #include "machine/pic.h"
+#include "machine/plugbox.h"
 
 #ifndef NOKERNEL
 
@@ -16,9 +17,10 @@ int main(void)
 	ShutdownService::instance();
 	CPUManager::instance();
 	PICManager::instance();
+	PlugboxManager::instance();
 	Screen::instance();
 
-	System::instance().run();
+	SystemManager::instance().run();
 
 	ShutdownService::instance().shutdown();
 

@@ -1,13 +1,3 @@
-/*****************************************************************************/
-/* Betriebssysteme                                                           */
-/*---------------------------------------------------------------------------*/
-/*                                                                           */
-/*                       K E Y B O A R D _ C O N T R O L L E R               */
-/*                                                                           */
-/*---------------------------------------------------------------------------*/
-/* Tastaturcontroller des PCs.                                               */
-/*****************************************************************************/
-
 #ifndef MACHINE_KEYBOARDCONTROLLER_H
 #define MACHINE_KEYBOARDCONTROLLER_H
 
@@ -28,15 +18,15 @@ namespace oostubs
 		};
 	};
 
-	class KeyboardControllerImpl
+	class KeyboardController
 	{
 		public:
-		typedef mpl::SingletonHolder<KeyboardControllerImpl> Singleton;
+		typedef mpl::SingletonHolder<KeyboardController> Singleton;
 
 			// KEYBOARD_CONTROLLER: Initialisierung der Tastatur: alle LEDs werden
 			//                      ausgeschaltet und die Wiederholungsrate auf
 			//                      maximale Geschwindigkeit eingestellt.
-			KeyboardControllerImpl();
+			KeyboardController();
 			
 			// KEY_HIT: Dient der Tastaturabfrage nach dem Auftreten einer Tastatur-
 			//          unterbrechung. Wenn der Tastendruck abgeschlossen ist und
@@ -66,20 +56,10 @@ namespace oostubs
 			bool get_led(KeyboardData::LED led) const { return mLEDs & static_cast<uint8_t>(led); }
 	
 		private:
-			KeyboardControllerImpl(const KeyboardControllerImpl &) = delete;
-	
-			// KEY_DECODED: Interpretiert die Make und Break-Codes der Tastatur und
-			//              liefert den ASCII Code, den Scancode und Informationen
-			//              darueber, welche zusaetzlichen Tasten wie Shift und Ctrl
-			//              gedrueckt wurden. Ein Rueckgabewert true bedeutet, dass
-			//              das Zeichen komplett ist, anderenfalls fehlen noch Make
-			//              oder Breakcodes.
-			bool key_decoded();
-			
-			// GET_ASCII_CODE: ermittelt anhand von Tabellen aus dem Scancode und
-			//                 den gesetzten Modifier-Bits den ASCII Code der Taste.
-			void get_ascii_code();
+			KeyboardController(const KeyboardController &) = delete;
 
+			bool key_decoded();
+			void get_ascii_code();
 			void wait_for_port_empty();
 			void wait_for_ack();
 	
@@ -95,12 +75,11 @@ namespace oostubs
 			static unsigned char asc_num_tab[];
 			static unsigned char scan_num_tab[];
 		
-			// Benutzte Ports des Tastaturcontrollers
 			const IO_Port mCtrlPort; // Status-(R) u. Steuerregister(W)
 			const IO_Port mDataPort; // Ausgabe-(R) u. Eingabepuffer(W)
 	};
 
-	typedef KeyboardControllerImpl::Singleton KeyboardController;
+	typedef KeyboardController::Singleton KeyboardControllerManager;
 }
 
 #endif

@@ -27,9 +27,7 @@ CGAScreen::CGAScreen(void)
 	, mControlPort(Port::CGA_CTRL)
 	, mDataPort(Port::CGA_DATA)
 {
-	mpl::fill(CGA_SCREEN, CGA_SCREEN + WIDTH * HEIGHT, 0);
-
-	update();
+	clear();
 }
 
 void CGAScreen::setCursor(uint x, uint y)
@@ -149,6 +147,15 @@ void CGAScreen::update(void)
 	mDataPort.outb((p >> 8) & 0xFF);
 	mControlPort.outb(CGA_CURSOR_LO);
 	mDataPort.outb(p & 0xFF);
+}
+
+void CGAScreen::clear(void)
+{
+	mpl::fill(CGA_SCREEN, CGA_SCREEN + WIDTH * HEIGHT, 0);
+
+	mPosX = mPosY = 0;
+
+	update();
 }
 
 }

@@ -6,12 +6,39 @@ namespace oostubs
 	namespace mpl
 	{
 		template<typename I, typename T>
-		void fill(I i1, I i2, const T& v)
+		I fill(I i1, I i2, const T& v)
 		{
-			for(; i1 != i2 ; ++i1)
+			while(i1 != i2)
 			{
-				*i1 = v;
+				*i1++ = v;
 			}
+
+			return i1;
+		}
+
+		template<typename I, typename O>
+		O copy(I i1, I i2, O j)
+		{
+			while(i1 != i2)
+			{
+				*j++ = *i1++;
+			}
+
+			return j;
+		}
+
+		template<typename I, typename O, typename P>
+		O copy_if(I i1, I i2, O j, P&& f)
+		{
+			for(; i1 != i2 ; ++j, ++i1)
+			{
+				if(f(*i1))
+				{
+					*j = *i1;
+				}
+			}
+
+			return j;
 		}
 	}
 }

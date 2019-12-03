@@ -1,18 +1,6 @@
-/*****************************************************************************/
-/* Betriebssysteme                                                           */
-/*---------------------------------------------------------------------------*/
-/*                                                                           */
-/*                       K E Y B O A R D _ C O N T R O L L E R               */
-/*                                                                           */
-/*---------------------------------------------------------------------------*/
-/* Tastaturcontroller des PCs.                                               */
-/*****************************************************************************/
-
-/* INCLUDES */
-
 #include "machine/keyboard_controller.h"
 
-#include "io.h"
+#include "machine/pic.h"
 
 namespace oostubs {
 
@@ -36,7 +24,7 @@ struct kbd_reply
 enum { break_bit = 0x80, prefix1 = 0xe0, prefix2   = 0xe1 };
 
 
-unsigned char KeyboardControllerImpl::normal_tab[] =
+unsigned char KeyboardController::normal_tab[] =
 {
 	0, 0, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '\b',
 	0, 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n',
@@ -46,7 +34,7 @@ unsigned char KeyboardControllerImpl::normal_tab[] =
 	0, 0, 0, '+', 0, 0, 0, 0, 0, 0, 0, '<', 0, 0
 };
 
-unsigned char KeyboardControllerImpl::shift_tab[] =
+unsigned char KeyboardController::shift_tab[] =
 {
 	0, 0, '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', 0,
 	0, 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', 0,
@@ -56,7 +44,7 @@ unsigned char KeyboardControllerImpl::shift_tab[] =
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '>', 0, 0
 };
 
-unsigned char KeyboardControllerImpl::alt_tab[] =
+unsigned char KeyboardController::alt_tab[] =
 {
 	0, 0, 0, 253, 0, 0, 0, 0, '{', '[', ']', '}', '\\', 0, 0,
 	0, '@', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '~', 0,
@@ -66,12 +54,12 @@ unsigned char KeyboardControllerImpl::alt_tab[] =
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '|', 0, 0
 };
 
-unsigned char KeyboardControllerImpl::asc_num_tab[] =
+unsigned char KeyboardController::asc_num_tab[] =
 {
 	'7', '8', '9', '-', '4', '5', '6', '+', '1', '2', '3', '0', ','
 };
 
-unsigned char KeyboardControllerImpl::scan_num_tab[] =
+unsigned char KeyboardController::scan_num_tab[] =
 {
 	8, 9, 10, 53, 5, 6, 7, 27, 2, 3, 4, 11, 51
 };
@@ -84,7 +72,7 @@ unsigned char KeyboardControllerImpl::scan_num_tab[] =
 //              gedrueckt wurden. Ein Rueckgabewert true bedeutet, dass
 //              das Zeichen komplett ist, anderenfalls fehlen noch Make
 //              oder Breakcodes.
-bool KeyboardControllerImpl::key_decoded(void)
+bool KeyboardController::key_decoded(void)
 {
 	bool done = false;
 	
@@ -227,7 +215,7 @@ bool KeyboardControllerImpl::key_decoded(void)
 
 // GET_ASCII_CODE: ermittelt anhand von Tabellen aus dem Scancode und
 //                 den gesetzten Modifier-Bits den ASCII Code der Taste.
-void KeyboardControllerImpl::get_ascii_code()
+void KeyboardController::get_ascii_code()
 {
 	// Sonderfall Scancode 53: Dieser Code wird sowohl von der Minustaste
 	// des normalen Tastaturbereichs, als auch von der Divisionstaste des
@@ -294,7 +282,7 @@ void KeyboardControllerImpl::get_ascii_code()
 //                      ausgeschaltet und die Wiederholungsrate auf
 //                      maximale Geschwindigkeit eingestellt.
 
-KeyboardControllerImpl::KeyboardControllerImpl(void)
+KeyboardController::KeyboardController(void)
 	: mCtrlPort(0x64), mDataPort(0x60)
 {
 	// alle LEDs ausschalten(bei vielen PCs ist NumLock nach dem Booten an)
@@ -308,8 +296,10 @@ KeyboardControllerImpl::KeyboardControllerImpl(void)
 
 // REBOOT: Fuehrt einen Neustart des Rechners durch. Ja, beim PC macht
 //         das der Tastaturcontroller.
-void KeyboardControllerImpl::reboot(void)
+void KeyboardController::reboot(void)
 {
+	PIC::Lock lock(PICManager::instance(), PIC::Device::KEYBOARD);
+
 	int status;
 	
 	// Dem BIOS mitteilen, dass das Reset beabsichtigt war
@@ -327,12 +317,12 @@ void KeyboardControllerImpl::reboot(void)
 	mCtrlPort.outb(cpu_reset);        // Reset
 }
 
-void KeyboardControllerImpl::wait_for_port_empty(void)
+void KeyboardController::wait_for_port_empty(void)
 {
 	while(mCtrlPort.inb() & inpb);
 }
 
-void KeyboardControllerImpl::wait_for_ack(void)
+void KeyboardController::wait_for_ack(void)
 {
 	wait_for_port_empty();
 	while(!(mCtrlPort.inb() & outb));
@@ -347,8 +337,10 @@ void KeyboardControllerImpl::wait_for_ack(void)
 //                  schnell die Tastencodes aufeinander folgen soll.
 //                  Erlaubt sind Werte zwischen 0(sehr schnell) und 31
 //                 (sehr langsam).
-void KeyboardControllerImpl::set_repeat_rate(int speed, int delay)
+void KeyboardController::set_repeat_rate(int speed, int delay)
 {
+	PIC::Lock lock(PICManager::instance(), PIC::Device::KEYBOARD);
+
 	wait_for_port_empty();
 
 	mDataPort.outb(kbd_cmd::set_speed);
@@ -362,8 +354,10 @@ void KeyboardControllerImpl::set_repeat_rate(int speed, int delay)
 
 // SET_LED: setzt oder loescht die angegebene Leuchtdiode
 
-void KeyboardControllerImpl::set_led(KeyboardData::LED led, bool on)
+void KeyboardController::set_led(KeyboardData::LED led, bool on)
 {
+	PIC::Lock lock(PICManager::instance(), PIC::Device::KEYBOARD);
+
 	wait_for_port_empty();
 
 	mDataPort.outb(kbd_cmd::set_led);
@@ -384,8 +378,10 @@ void KeyboardControllerImpl::set_led(KeyboardData::LED led, bool on)
 //          werden konnte, werden diese in Key zurueckgeliefert. Anderen-
 //          falls liefert key_hit() einen ungueltigen Wert zurueck, was
 //          mit Key::valid() ueberprueft werden kann.
-Key KeyboardControllerImpl::key_hit(void)
+Key KeyboardController::key_hit(void)
 {
+	PIC::Lock lock(PICManager::instance(), PIC::Device::KEYBOARD);
+
 	Key r;
 
 	wait_for_port_empty();

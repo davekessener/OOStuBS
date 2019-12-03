@@ -1,37 +1,34 @@
-/*****************************************************************************/
-/* Betriebssysteme                                                           */
-/*---------------------------------------------------------------------------*/
-/*                                                                           */
-/*                         A P P L I C A T I O N                             */
-/*                                                                           */
-/*---------------------------------------------------------------------------*/
-/*****************************************************************************/
-
 #ifndef OOSTUBS_SYSTEM_H
 #define OOSTUBS_SYSTEM_H
 
+#include "aux.h"
+
 #include "mpl/singleton.h"
+
+#include "machine/keyboard_gate.h"
 
 namespace oostubs
 {
-	class SystemImpl
+	class System
 	{
 		public:
-		typedef mpl::singleton_policies::OneshotCreationPolicy<SystemImpl> CreationPolicy;
-		typedef mpl::SingletonHolder<SystemImpl> Singleton;
+		typedef mpl::singleton_policies::OneshotCreationPolicy<System> CreationPolicy;
+		typedef mpl::SingletonHolder<System> Singleton;
 
 		public:
 			void run( );
 	
 		private:
-			SystemImpl( ) { }
-			~SystemImpl( ) { }
-			SystemImpl(const SystemImpl&) = delete;
+			System( );
+			~System( );
+			System(const System&) = delete;
+
+			KeyboardGate mKeyboardDriver;
 
 			friend CreationPolicy;
 	};
 
-	typedef SystemImpl::Singleton System;
+	typedef System::Singleton SystemManager;
 }
 
 #endif

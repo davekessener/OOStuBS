@@ -5,20 +5,21 @@
 namespace oostubs {
 
 PIC::PIC(void)
-	: mIMR(Port::PIC_DATA_M)
+	: mIMR_M(Port::PIC_DATA_M)
+	, mIMR_S(Port::PIC_DATA_S)
 {
-	mMask = mIMR.inb();
+	mMask = (mIMR_S.inb() << 8) | mIMR_M.inb();
 }
 
 void PIC::enable(Device d)
 {
 	if(is_disabled(d))
 	{
-		mMask &= ~static_cast<uint8_t>(d);
+		uint16_t v = static_cast<uint16_t>(d);
 
-		kout << "\nSending " << io::Format::HEX << mMask << " to " << mIMR.port() << io::Format::DEC << io::endl;
+		mMask &= ~v;
 
-		mIMR.outb(mMask);
+		((v & 0xFF) ? mIMR_M : mIMR_S).outb(mMask);
 	}
 }
 
@@ -26,9 +27,11 @@ void PIC::disable(Device d)
 {
 	if(!is_disabled(d))
 	{
-		mMask |= static_cast<uint8_t>(d);
+		uint16_t v = static_cast<uint16_t>(d);
 
-		mIMR.outb(mMask);
+		mMask |= v;
+
+		((v & 0xFF) ? mIMR_M : mIMR_S).outb(mMask);
 	}
 }
 

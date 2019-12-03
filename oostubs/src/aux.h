@@ -24,6 +24,12 @@ namespace oostubs
 		PIC_CTRL_S = 0xA0,
 		PIC_DATA_S = 0xA1
 	};
+
+	enum class IRQ : uint8_t
+	{
+		TIMER = 0x20,
+		KEYBOARD = 0x21
+	};
 }
 
 #endif

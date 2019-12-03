@@ -71,6 +71,7 @@ namespace oostubs
 			void puts(char *s, attrib_t a = DEFAULT_ATTRIBUTE) { puts_n(s, -1, a); }
 			void wputs_n(uint16_t *, uint);
 			void scroll( );
+			void clear( );
 
 		private:
 			CGAScreen(const CGAScreen&) = delete;
