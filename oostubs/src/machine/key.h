@@ -22,26 +22,27 @@ namespace oostubs
 		// Bit-Masken fuer die Modifier-Tasten
 		struct mbit
 		{
-			static constexpr int SHIFT       = 1;
-			static constexpr int ALT_LEFT    = 2;
-			static constexpr int ALT_RIGHT   = 4;
-			static constexpr int CTRL_LEFT   = 8;
-			static constexpr int CTRL_RIGHT  = 16;
-			static constexpr int CAPS_LOCK   = 32;
-			static constexpr int NUM_LOCK    = 64;
-			static constexpr int SCROLL_LOCK = 128;
+			static constexpr uint SHIFT       = 1;
+			static constexpr uint ALT_LEFT    = 2;
+			static constexpr uint ALT_RIGHT   = 4;
+			static constexpr uint CTRL_LEFT   = 8;
+			static constexpr uint CTRL_RIGHT  = 16;
+			static constexpr uint CAPS_LOCK   = 32;
+			static constexpr uint NUM_LOCK    = 64;
+			static constexpr uint SCROLL_LOCK = 128;
 		};
 			
 		// Scan-Codes einiger spezieller Tasten
 		struct scan_code
 		{ 
-			static constexpr int F1    = 0x3B;
-			static constexpr int DEL   = 0x53;
-			static constexpr int UP    = 72;
-			static constexpr int DOWN  = 80;
-			static constexpr int LEFT  = 75;
-			static constexpr int RIGHT = 77;
-			static constexpr int DIV   = 0x8;
+			static constexpr uint ESC   = 0x01;
+			static constexpr uint F1    = 0x3B;
+			static constexpr uint DEL   = 0x53;
+			static constexpr uint UP    = 72;
+			static constexpr uint DOWN  = 80;
+			static constexpr uint LEFT  = 75;
+			static constexpr uint RIGHT = 77;
+			static constexpr uint DIV   = 0x8;
 		};
 	
 		public:

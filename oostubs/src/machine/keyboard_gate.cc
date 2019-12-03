@@ -7,20 +7,35 @@
 
 namespace oostubs {
 
-void KeyboardGate::doTrigger(uint slot)
-{
-	Key k = KeyboardControllerManager::instance().key_hit();
+extern bool use_sync;
 
-	if(k.valid())
+void KeyboardGate::doPrologue(uint slot)
+{
+	mKey = KeyboardControllerManager::instance().key_hit();
+
+	if(mKey.valid() && mKey.scancode() == Key::scan_code::DEL && mKey.alt() && mKey.ctrl())
+	{
+		KeyboardControllerManager::instance().reboot();
+	}
+
+	if(mKey.valid() && mKey.scancode() == Key::scan_code::ESC)
+	{
+		use_sync = !use_sync;
+	}
+}
+
+void KeyboardGate::doEpilogue(void)
+{
+	auto& screen{Screen::instance()};
+
+	if(mKey.valid())
 	{
 		uint cx = 0, cy = 0;
 
-		Screen::instance().getCursor(&cx, &cy);
-		Screen::instance().setCursor(10, 10);
-
-		kout << k.ascii() << io::flush;
-
-		Screen::instance().setCursor(cx, cy);
+		screen.getCursor(&cx, &cy);
+		screen.setCursor(10, 10);
+		kout << mKey.ascii() << io::flush;
+		screen.setCursor(cx, cy);
 	}
 }
 

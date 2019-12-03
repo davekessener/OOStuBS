@@ -13,7 +13,7 @@ namespace oostubs
 			PanicGate( ) { }
 
 		protected:
-			void doTrigger(uint) override;
+			void doPrologue(uint) override;
 
 		private:
 			PanicGate(const PanicGate&) = delete;

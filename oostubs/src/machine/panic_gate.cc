@@ -4,7 +4,7 @@
 
 namespace oostubs {
 
-void PanicGate::doTrigger(uint slot)
+void PanicGate::doPrologue(uint slot)
 {
 	PANIC("UNHANDLED INT #", slot, "!");
 }

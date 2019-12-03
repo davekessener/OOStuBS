@@ -29,6 +29,8 @@ CC_SOURCES = $(shell find $(SRC_DIR) -name "*.cc")
 C_SOURCES = $(shell find $(SRC_DIR) -name "*.c")
 ASM_SOURCES = $(shell find $(SRC_DIR) -name "*.s")
 
+DRIVE_HD ?= /dev/sdb
+
 # Einstellungen in Abhaengigkeit vom Generierungssystem:
 #
 #    ASMOBJFORMAT: Ausgabeformat fuer den Assembler. Das Format muss dem

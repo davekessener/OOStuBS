@@ -1,6 +1,7 @@
 #include "aux.h"
 
 #include "machine/plugbox.h"
+#include "machine/guard.h"
 
 extern "C" void guardian(unsigned int slot);
 
@@ -8,7 +9,14 @@ namespace oostubs {
 
 void guardian_impl(uint slot)
 {
-	PlugboxManager::instance().request(static_cast<IRQ>(slot)).trigger(slot);
+	Gate& gate{PlugboxManager::instance().request(static_cast<IRQ>(slot))};
+
+	gate.prologue(slot);
+
+	if(gate.has_epilogue())
+	{
+		GuardManager::instance().relay(&gate);
+	}
 }
 
 }
