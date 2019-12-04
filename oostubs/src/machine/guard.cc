@@ -1,15 +1,27 @@
 #include "machine/guard.h"
 
+#include "machine/cpu.h"
+
 namespace oostubs {
 
 void Guard::leave(void)
 {
-	while(!mBacklog.empty())
+	while(true)
 	{
+		if(mBacklog.empty())
+		{
+			CPU::Lock lock(CPUManager::instance());
+
+			if(mBacklog.empty())
+			{
+				unlock();
+
+				return;
+			}
+		}
+
 		mBacklog.pop()->epilogue();
 	}
-
-	unlock();
 }
 
 void Guard::relay(Gate *gate)

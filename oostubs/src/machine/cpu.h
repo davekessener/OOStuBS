@@ -10,6 +10,17 @@ namespace oostubs
 	class CPU
 	{
 		public:
+		class Lock
+		{
+			public:
+				Lock(CPU& cpu) : mCPU(&cpu) { mCPU->disable_int(); }
+				~Lock( ) { mCPU->enable_int(); }
+
+			private:
+				CPU *mCPU;
+		};
+
+		public:
 			CPU( ) { }
 
 			void enable_int( );
