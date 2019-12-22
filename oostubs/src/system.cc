@@ -8,9 +8,28 @@
 #include "machine/cga_screen.h"
 #include "machine/guard.h"
 
+#include "thread/coroutine.h"
+#include "thread/scheduler.h"
+
 namespace oostubs {
 
-volatile bool use_sync = false;
+template<uint I>
+class Thread : public Coroutine
+{
+	public:
+		Thread( ) : Coroutine(mStack) { }
+
+	protected:
+		void doRun( ) override
+		{
+			kout << "Thread " << I << io::endl;
+
+			SchedulerManager::instance().resume();
+		}
+
+	private:
+		uint8_t mStack[0x1000];
+};
 
 System::System(void)
 {
@@ -24,37 +43,19 @@ System::~System(void)
 
 void System::run(void)
 {
-	auto& screen{Screen::instance()};
+//	PICManager::instance().enable(PIC::Device::KEYBOARD);
 
-	PICManager::instance().enable(PIC::Device::KEYBOARD);
+//	CPUManager::instance().enable_int();
 
-	CPUManager::instance().enable_int();
+	Thread<1> t1;
+	Thread<2> t2;
+	Thread<3> t3;
 
-	bool f = !use_sync;
-	for(uint i = 0 ; true ; ++i)
-	{
-		if(f != use_sync)
-		{
-			*((uint16_t *) 0xB8000) = ((f = use_sync) ? (0x0200 | 'O') : (0x7400 | 'X'));
-		}
+	SchedulerManager::instance().add(&t1);
+	SchedulerManager::instance().add(&t2);
+	SchedulerManager::instance().add(&t3);
 
-		if(f)
-		{
-			GuardManager::instance().enter();
-		}
-
-		uint cx = 0, cy = 0;
-
-		screen.getCursor(&cx, &cy);
-		screen.setCursor(5, 5);
-		kout << ((i >> 15) % 10) << io::flush;
-		screen.setCursor(cx, cy);
-
-		if(f)
-		{
-			GuardManager::instance().leave();
-		}
-	}
+	SchedulerManager::instance().schedule();
 }
 
 }

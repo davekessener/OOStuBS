@@ -31,7 +31,7 @@ namespace oostubs
 			void relay(Gate *);
 
 		private:
-			FixedRingbuffer<Gate *, 0x100> mBacklog;
+			FixedRingbuffer<Gate *, 0x40> mBacklog;
 	};
 
 	typedef mpl::SingletonHolder<Guard> GuardManager;

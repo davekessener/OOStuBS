@@ -10,9 +10,13 @@
 
 #ifndef NOKERNEL
 
+volatile int gdb = 0;
+
 int main(void)
 {
 	using namespace oostubs;
+
+	while(!gdb);
 
 	ShutdownService::instance();
 	CPUManager::instance();

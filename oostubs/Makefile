@@ -94,6 +94,7 @@ OBJPRE = $(addprefix $(BIN_DIR)/,$(ASM_OBJECTS) $(C_OBJECTS) $(CC_OBJECTS))
 
 all: bootdisk.iso
 	cp bootdisk.iso ~/shared/
+	cp $(ISO_DIR)/boot/system ~/shared/
 
 # --------------------------------------------------------------------------
 # Regeln zur Erzeugung der Abhaengigkeitsdateien
@@ -119,12 +120,13 @@ $(BIN_DIR)/%.c.o : %.c
 $(BIN_DIR)/%.cc.o : %.cc
 	@echo "CXX		$@"
 	@if test \( ! \( -d $(@D) \) \) ;then mkdir -p $(@D);fi
+	$(VERBOSE) $(CXX) -S $(CXXFLAGS) -o $@.asm $<
 	$(VERBOSE) $(CXX) -c $(CXXFLAGS) -o $@ $<
 
 $(BIN_DIR)/%.s.o : %.s
 	@echo "ASM		$@"
 	@if test \( ! \( -d $(@D) \) \) ;then mkdir -p $(@D);fi
-	$(VERBOSE) $(ASM) -f $(ASMOBJFORMAT) -o $@ $<
+	$(VERBOSE) $(ASM) -f $(ASMOBJFORMAT) -i ./$(SRC_DIR)/ -o $@ $<
 
 # --------------------------------------------------------------------------
 # Gelinktes System
