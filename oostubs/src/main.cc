@@ -10,7 +10,7 @@
 
 #ifndef NOKERNEL
 
-volatile int gdb = 0;
+volatile int gdb = 1;
 
 int main(void)
 {

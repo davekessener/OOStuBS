@@ -17,14 +17,19 @@ template<uint I>
 class Thread : public Coroutine
 {
 	public:
-		Thread( ) : Coroutine(mStack) { }
+		Thread( ) : Coroutine(mStack + sizeof(mStack)) { }
 
 	protected:
 		void doRun( ) override
 		{
-			kout << "Thread " << I << io::endl;
+			while(true)
+			{
+				kout << "Thread " << I << io::endl;
 
-			SchedulerManager::instance().resume();
+				for(uint i = 0 ; i < 0x5000000 ; ++i);
+
+				SchedulerManager::instance().resume();
+			}
 		}
 
 	private:

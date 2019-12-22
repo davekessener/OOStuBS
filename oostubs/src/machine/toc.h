@@ -33,6 +33,7 @@ extern "C" {
 		void *r15;
 		void *rbp;
 		void *rsp;
+		void *self;
 //		char fpu[108]; // Optional: 108 Byte extended CPU state (MMX, SSE, ...)
 	} toc_t;
 

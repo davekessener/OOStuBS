@@ -32,10 +32,10 @@ void toc_settle(toc_t *regs, void *tos, void *self)
 
 	uint64_t *stack = (uint64_t *) tos;
 
-	*--stack = (uint64_t) self;
 	*--stack = (uint64_t) &oostubs::Coroutine::kickoff;
 
 	regs->rsp = stack;
+	regs->self = self;
 }
 
 }

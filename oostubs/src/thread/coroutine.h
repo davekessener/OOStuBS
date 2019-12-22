@@ -15,7 +15,7 @@ namespace oostubs
 			void resume(Coroutine&);
 			void run( ) { doRun(); }
 
-			static void kickoff(Coroutine *);
+			static void kickoff(toc_t *);
 
 		protected:
 			virtual void doRun( ) = 0;

@@ -59,7 +59,6 @@ toc_go:
 toc_switch:
 	save_to_toc rdi
 	load_from_toc rsi
-;	mov rdi,rsi
-	mov rdi,[rsp+8]
+	mov rdi,rsi
 	ret
 

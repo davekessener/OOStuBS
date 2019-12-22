@@ -12,9 +12,9 @@ void Coroutine::resume(Coroutine& other)
 	toc_switch(&mTOC, &other.mTOC);
 }
 
-void Coroutine::kickoff(Coroutine *self)
+void Coroutine::kickoff(toc_t *toc)
 {
-	self->run();
+	((Coroutine *) toc->self)->run();
 }
 
 }
