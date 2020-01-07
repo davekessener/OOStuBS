@@ -22,7 +22,11 @@ namespace oostubs
 		PIC_CTRL_M = 0x20,
 		PIC_DATA_M = 0x21,
 		PIC_CTRL_S = 0xA0,
-		PIC_DATA_S = 0xA1
+		PIC_DATA_S = 0xA1,
+		PIT1_COUNT0 = 0x40,
+		PIT1_COUNT1 = 0x41,
+		PIT1_COUNT2 = 0x42,
+		PIT1_CTRL = 0x43
 	};
 
 	enum class IRQ : uint8_t

@@ -1,5 +1,7 @@
 #include "thread/scheduler.h"
 
+#include "machine/guard.h"
+
 namespace oostubs {
 
 void Scheduler::schedule(void)

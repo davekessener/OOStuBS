@@ -1,5 +1,7 @@
 #include "thread/coroutine.h"
 
+#include "machine/guard.h"
+
 namespace oostubs {
 
 void Coroutine::go(void)
@@ -14,6 +16,8 @@ void Coroutine::resume(Coroutine& other)
 
 void Coroutine::kickoff(toc_t *toc)
 {
+	GuardManager::instance().leave();
+
 	((Coroutine *) toc->self)->run();
 }
 

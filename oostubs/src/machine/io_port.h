@@ -1,18 +1,3 @@
-/*****************************************************************************/
-/* Betriebssysteme                                                           */
-/*---------------------------------------------------------------------------*/
-/*                                                                           */
-/*                              I O _ P O R T                                */
-/*                                                                           */
-/*---------------------------------------------------------------------------*/
-/* Diese Klasse dient dem Zugriff auf die Ein-/Ausgabe Ports des PCs. Beim   */
-/* PC gibt es einen gesonderten I/O-Adressraum, der nur mittels der Maschi-  */
-/* neninstruktionen 'in' und 'out' angesprochen werden kann. Ein IO_Port-    */
-/* Objekt wird beim Erstellen an eine Adresse des I/O-Adressraums gebunden   */
-/* und kann dann fuer byte- oder wortweise Ein- oder Ausgaben verwendet wer- */
-/* den.                                                                      */
-/*****************************************************************************/
-
 #ifndef OOSTUBS_MACHINE_IOPORT_H
 #define OOSTUBS_MACHINE_IOPORT_H
 
@@ -35,7 +20,6 @@ namespace oostubs
 			uint16_t port( ) const { return address(); }
 		
 		private:
-			// Adresse im I/O-Adressraum
 			uint16_t mAddress;
 	};
 }
