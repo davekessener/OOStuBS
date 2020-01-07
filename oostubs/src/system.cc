@@ -13,11 +13,10 @@
 
 namespace oostubs {
 
-template<uint I>
-class Thread : public Coroutine
+class Application : public Coroutine
 {
 	public:
-		Thread( ) : Coroutine(mStack + sizeof(mStack)) { }
+		Application(uint i) : Coroutine(mStack + sizeof(mStack)), mI(i) { }
 
 	protected:
 		void doRun( ) override
@@ -27,7 +26,7 @@ class Thread : public Coroutine
 				{
 					Guard::Lock lock(GuardManager::instance());
 
-					kout << "Thread " << I << io::endl;
+					kout << "Application " << mI << io::endl;
 				}
 
 				for(uint i = 0 ; i < 0x5000000 ; ++i);
@@ -35,6 +34,7 @@ class Thread : public Coroutine
 		}
 
 	private:
+		uint mI;
 		uint8_t mStack[0x1000];
 };
 
@@ -51,19 +51,19 @@ System::~System(void)
 
 void System::run(void)
 {
-	Thread<1> t1;
-	Thread<2> t2;
-	Thread<3> t3;
-	Thread<4> t4;
-	Thread<5> t5;
+	Application a1(1);
+	Application a2(2);
+	Application a3(3);
+	Application a4(4);
+	Application a5(5);
 
 	GuardManager::instance().enter();
 
-	SchedulerManager::instance().add(&t1);
-	SchedulerManager::instance().add(&t2);
-	SchedulerManager::instance().add(&t3);
-	SchedulerManager::instance().add(&t4);
-	SchedulerManager::instance().add(&t5);
+	SchedulerManager::instance().add(&a1);
+	SchedulerManager::instance().add(&a2);
+	SchedulerManager::instance().add(&a3);
+	SchedulerManager::instance().add(&a4);
+	SchedulerManager::instance().add(&a5);
 
 	PICManager::instance().enable(PIC::Device::TIMER);
 	PICManager::instance().enable(PIC::Device::KEYBOARD);
