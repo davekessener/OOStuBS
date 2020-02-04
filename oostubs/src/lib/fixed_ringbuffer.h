@@ -31,6 +31,7 @@ namespace oostubs
 			
 			void push(const_reference);
 			value_type pop( );
+			bool remove(const_reference);
 
 			bool empty( ) const { return mReadIdx == mWriteIdx; }
 			bool full( ) const { return mReadIdx == ((mWriteIdx + 1) % (N+1)); }
@@ -60,6 +61,33 @@ namespace oostubs
 		mReadIdx = (mReadIdx + 1) % (N+1);
 
 		return r;
+	}
+
+	template<typename T, size_t N>
+	bool FixedRingbuffer<T, N>::remove(const_reference v)
+	{
+		bool found = false;
+
+		for(uint i = mReadIdx, last = 0 ; i != mWriteIdx ; i = (i + 1) % (N+1))
+		{
+			if(found)
+			{
+				mContent[last] = mpl::move(mContent[i]);
+			}
+			else if(mContent[i] == v)
+			{
+				found = true;
+			}
+
+			last = i;
+		}
+
+		if(found)
+		{
+			mWriteIdx = (mWriteIdx + N+1 - 1) % (N+1);
+		}
+
+		return found;
 	}
 }
 

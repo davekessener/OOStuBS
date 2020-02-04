@@ -19,6 +19,14 @@ void KeyboardGate::doPrologue(uint slot)
 
 void KeyboardGate::doEpilogue(void)
 {
+	Key k = mKey;
+
+	mKey = {};
+
+	if(k.valid())
+	{
+		onKeyHit(k);
+	}
 }
 
 }

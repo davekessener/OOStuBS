@@ -3,10 +3,11 @@
 
 #include "aux.h"
 
-#include "thread/scheduler.h"
+#include "sys/scheduler.h"
 
 #include "machine/gate.h"
 #include "machine/pit.h"
+#include "machine/plugbox.h"
 
 namespace oostubs
 {
@@ -15,11 +16,11 @@ namespace oostubs
 		static constexpr uint PIT_INTERVAL = 20000;
 
 		public:
-			SchedulerGate( ) : Gate(true) { PITManager::instance().interval(PIT_INTERVAL); }
+			SchedulerGate( );
 
 		protected:
 			void doPrologue(uint) override { }
-			void doEpilogue( ) override { SchedulerManager::instance().resume(); }
+			void doEpilogue( ) override;
 	};
 }
 

@@ -5,8 +5,6 @@
 
 #include "lib/fixed_ringbuffer.h"
 
-#include "mpl/singleton.h"
-
 #include "thread/coroutine.h"
 
 namespace oostubs
@@ -18,15 +16,17 @@ namespace oostubs
 
 			void schedule( );
 			void resume(bool = true);
-			void add(Coroutine *);
+			void add(Coroutine&);
 			void exit( );
+			void kill(Coroutine&);
+
+		protected:
+			Coroutine *active( ) { return mActive; }
 
 		private:
 			Coroutine *mActive;
 			FixedRingbuffer<Coroutine *, 0x100> mBacklog;
 	};
-
-	typedef mpl::SingletonHolder<Scheduler> SchedulerManager;
 }
 
 #endif

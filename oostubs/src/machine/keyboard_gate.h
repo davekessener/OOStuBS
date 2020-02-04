@@ -15,6 +15,8 @@ namespace oostubs
 			void doPrologue(uint) override;
 			void doEpilogue( ) override;
 
+			virtual void onKeyHit(Key) = 0;
+
 		private:
 			Key mKey;
 	};
