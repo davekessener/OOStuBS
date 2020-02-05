@@ -93,8 +93,6 @@ namespace oostubs
 			template<typename T>
 			T *OneshotCreationPolicy<T>::recreate(void)
 			{
-				// TODO error handling
-
 				return nullptr;
 			}
 

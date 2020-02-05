@@ -3,7 +3,8 @@
 
 #include "io.h"
 
-#include "machine/cpu.h"
+#include "sys/cpu.h"
+#include "sys/screen.h"
 
 #define PANIC(...) ::oostubs::panic(__FILE__, __LINE__, __VA_ARGS__)
 #define ASSERT(c) do { if(!(c)) { PANIC("ASSERTION FAILED: " #c ); } } while(false)

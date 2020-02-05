@@ -1,21 +1,7 @@
-/*****************************************************************************/
-/* Betriebssysteme                                                           */
-/*---------------------------------------------------------------------------*/
-/*                                                                           */
-/*                             C G A _ S C R E E N                           */
-/*                                                                           */
-/*---------------------------------------------------------------------------*/
-/* Mit Hilfe dieser Klasse kann man auf den Bildschirm des PCs zugreifen.    */
-/* Der Zugriff erfolgt direkt auf der Hardwareebene, d.h. ueber den Bild-    */
-/* schirmspeicher bzw. die I/O-Ports der Grafikkarte.                        */
-/*****************************************************************************/
-
 #ifndef OOOSTUBS_MACHINE_CGASCREEN_H
 #define OOOSTUBS_MACHINE_CGASCREEN_H
 
 #include "machine/io_port.h"
-
-#include "mpl/singleton.h"
 
 namespace oostubs
 {
@@ -82,8 +68,6 @@ namespace oostubs
 			uint mPosX, mPosY;
 			IO_Port mControlPort, mDataPort;
 	};
-
-	typedef mpl::SingletonHolder<CGAScreen> Screen;
 }
 
 #endif

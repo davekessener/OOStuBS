@@ -2,6 +2,8 @@
 
 #include "machine/guard.h"
 
+#include "sys/cpu.h"
+
 namespace oostubs {
 
 Keyboard::Keyboard(void)

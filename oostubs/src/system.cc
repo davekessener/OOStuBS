@@ -7,6 +7,7 @@
 #include "machine/cpu.h"
 #include "machine/cga_screen.h"
 #include "machine/guard.h"
+#include "machine/real.h"
 
 #include "thread/customer.h"
 #include "thread/semaphore.h"
@@ -122,6 +123,12 @@ void System::run(void)
 	SchedulerManager::instance().add(c2);
 	SchedulerManager::instance().add(c3);
 	SchedulerManager::instance().add(c4);
+
+	realmode_info rmi;
+	toc_t toc;
+
+	enter_real(&rmi, &toc);
+	leave_real(&rmi, &toc);
 
 	PICManager::instance().enable(PIC::Device::TIMER);
 	PICManager::instance().enable(PIC::Device::KEYBOARD);

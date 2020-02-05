@@ -30,3 +30,24 @@ r15_offset: resq 1
 rbp_offset: resq 1
 rsp_offset: resq 1
 fpu_offset: resb 108
+
+%macro load_from_toc 1
+	mov	rbx,[%1+rbx_offset]
+	mov	r12,[%1+r12_offset]
+	mov	r13,[%1+r13_offset]
+	mov	r14,[%1+r14_offset]
+	mov	r15,[%1+r15_offset]
+	mov	rbp,[%1+rbp_offset]
+	mov	rsp,[%1+rsp_offset]
+%endmacro
+
+%macro save_to_toc 1
+	mov	[%1+rbx_offset],rbx
+	mov	[%1+r12_offset],r12
+	mov	[%1+r13_offset],r13
+	mov	[%1+r14_offset],r14
+	mov	[%1+r15_offset],r15
+	mov	[%1+rbp_offset],rbp
+	mov	[%1+rsp_offset],rsp
+%endmacro
+

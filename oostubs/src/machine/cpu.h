@@ -3,8 +3,6 @@
 
 #include "aux.h"
 
-#include "mpl/singleton.h"
-
 namespace oostubs
 {
 	class CPU
@@ -27,9 +25,9 @@ namespace oostubs
 		};
 
 		public:
-			CPU( ) : mCounter(0) { }
+			CPU( ) : mEnabled(false) { }
 
-			bool enabled( ) const { return mCounter > 0; }
+			bool enabled( ) const { return mEnabled; }
 
 			void enable_int( );
 			void disable_int( );
@@ -37,13 +35,11 @@ namespace oostubs
 			void halt( );
 
 		private:
-			int mCounter;
+			bool mEnabled;
 
 			CPU(const CPU&) = delete;
 			CPU& operator=(const CPU&) = delete;
 	};
-
-	typedef mpl::SingletonHolder<CPU> CPUManager;
 }
 
 #endif
