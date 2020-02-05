@@ -9,16 +9,19 @@ extern "C" void cpu_halt(void);
 
 void CPU::enable_int(void)
 {
+	++mCounter;
 	int_enable();
 }
 
 void CPU::disable_int(void)
 {
+	--mCounter;
 	int_disable();
 }
 
 void CPU::idle(void)
 {
+	++mCounter;
 	cpu_idle();
 }
 

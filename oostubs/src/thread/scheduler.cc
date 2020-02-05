@@ -25,6 +25,7 @@ void Scheduler::resume(bool f)
 
 	while(mBacklog.empty())
 	{
+		CPUManager::instance().disable_int();
 		GuardManager::instance().leave();
 		CPUManager::instance().idle();
 		GuardManager::instance().enter();
