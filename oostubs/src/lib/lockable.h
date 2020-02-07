@@ -30,11 +30,11 @@ namespace oostubs
 			bool mState;
 	};
 
-	class Lock
+	class Locker
 	{
 		public:
-			Lock(Lockable *lock) : mLock(lock) { mLock->lock(); }
-			~Lock( ) { mLock->unlock(); }
+			Locker(Lockable *lock) : mLock(lock) { mLock->lock(); }
+			~Locker( ) { mLock->unlock(); }
 
 		private:
 			Lockable *mLock;

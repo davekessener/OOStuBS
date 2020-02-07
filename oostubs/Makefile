@@ -16,6 +16,10 @@
 #
 # -----------------------------------------------------------------------------
 
+MAKEFLAGS += --no-builtin-rules
+
+.SUFFIXES:
+
 # -----------------------------------------------------------------------------
 # Liste der Quelltexte:
 
@@ -23,6 +27,9 @@ SRC_DIR = src
 BIN_DIR = bin
 DEP_DIR = dep
 ISO_DIR = iso
+LIB_DIR = lib
+INITRD_DIR = initrd
+INCLUDE_DIRS = -I $(LIB_DIR)/initrd/lib
 
 STARTUP_SOURCE = startup.s
 CC_SOURCES = $(shell find $(SRC_DIR) -name "*.cc")
@@ -57,11 +64,12 @@ ASMOBJFORMAT = elf64
 #DRIVE_HD = /dev/sdz
 DELETE = rm
 ASM = nasm
+MKINITRD = $(LIB_DIR)/initrd/mkinitrd
 QEMU ?= qemu-system-x86_64
 CC ?= gcc
 CXX ?= g++
 USER_MACROS ?=
-CFLAGS := $(CFLAGS) -m64 -mno-red-zone -Wall -Werror -Wno-write-strings -fno-stack-protector -nostdlib -I $(SRC_DIR) -g $(USER_MACROS) #-DDEBUG
+CFLAGS := $(CFLAGS) -O2 -m64 -mno-red-zone -Wall -Werror -Wno-write-strings -fno-stack-protector -nostdlib -I $(SRC_DIR) $(INCLUDE_DIRS) -g $(USER_MACROS) #-DDEBUG
 CXXFLAGS := $(CFLAGS) -Wall -Wno-non-virtual-dtor -fno-threadsafe-statics -fno-use-cxa-atexit -fno-rtti -fno-exceptions
 
 ifneq ($(shell which grub-mkrescue 2> /dev/null),)
@@ -96,10 +104,11 @@ all: bootdisk.iso
 	cp bootdisk.iso ~/shared/
 	cp $(ISO_DIR)/boot/system ~/shared/
 
-initrd/mkinitrd: $(shell find initrd)
-	$(MAKE) -C initrd/
+$(MKINITRD): $(shell find $(LIB_DIR)/initrd)
+	$(MAKE) -C $(LIB_DIR)/initrd/
 
-$(BIN_DIR)/initrd.bin: initrd/mkinitrd $(shell find 
+$(BIN_DIR)/initrd.bin: $(MKINITRD) $(shell find $(INITRD_DIR))
+	cd $(INITRD_DIR) && find . -type f | xargs ../$(MKINITRD) -v7 ../$(BIN_DIR)/initrd.bin
 
 # --------------------------------------------------------------------------
 # Regeln zur Erzeugung der Abhaengigkeitsdateien
@@ -149,10 +158,11 @@ $(BIN_DIR)/system: $(FIRST_OBJECT) $(OBJPRE)
 # es sich nicht um den Wechsel in den Protected Mode oder den Setup aus dem
 # BIOS heraus kuemmern muss.
 
-bootdisk.iso : $(BIN_DIR)/system
+bootdisk.iso : $(BIN_DIR)/system $(BIN_DIR)/initrd.bin
 	@echo "BUILD		$@"
 	@if test \( ! \( -d $(@D) \) \) ;then mkdir -p $(@D);fi
-	$(VERBOSE) cp $< $(ISO_DIR)/boot/system
+	$(VERBOSE) cp $(BIN_DIR)/system $(ISO_DIR)/boot/system
+	$(VERBOSE) cp $(BIN_DIR)/initrd.bin $(ISO_DIR)/boot/initrd.bin
 	$(VERBOSE) $(MKRESCUE) -o $@ $(ISO_DIR) > $(BIN_DIR)/mk_log.txt
 
 # --------------------------------------------------------------------------
@@ -166,6 +176,7 @@ clean:
 	$(VERBOSE) rm -rf $(DEP_DIR)
 	@echo "RM       bootdisk.iso"
 	$(VERBOSE) rm -f bootdisk.iso
+	$(MAKE) -C $(LIB_DIR)/initrd clean
 
 # --------------------------------------------------------------------------
 # 'bootdisk' erzeugt zunaechst das System, falls das noch nicht geschehen ist.

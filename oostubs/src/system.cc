@@ -3,11 +3,11 @@
 #include "aux.h"
 #include "io.h"
 #include "mboot.h"
+#include "initrd.h"
 
 #include "machine/plugbox.h"
 #include "machine/pic.h"
 #include "machine/cpu.h"
-#include "machine/cga_screen.h"
 #include "machine/guard.h"
 #include "machine/real.h"
 
@@ -22,74 +22,38 @@
 #include "user/keyboard.h"
 #include "user/sleeper.h"
 
+#include "gui/texture.h"
+#include "gui/screen.h"
+
+#include "app/screensaver.h"
+
 namespace oostubs {
 
-#define CGA_SCREEN ((uint16_t *) 0xB8000)
-
-class Clock : public Customer
+class SystemThread : public Customer
 {
 	public:
-		Clock(uint i, uint f, uint m) : Customer(mStack + sizeof(mStack)), mI(i), mC(0), mF(f), mM(m) { }
+		SystemThread( ) : Customer(mStack + sizeof(mStack)) { }
 
 	protected:
-		void doRun( ) override
-		{
-			while(true)
-			{
-				CGA_SCREEN[80 - mI] = 0x0F00 | ('0' + (mC++ % mM));
-
-				buzzer.sleep(50 * mF);
-			}
-		}
+		void doRun( ) override;
 
 	private:
-		uint mI, mC, mF, mM;
-		Sleeper buzzer;
-		uint8_t mStack[0x1000];
+		u8 mStack[0x1000];
 };
 
-class Application : public Customer
+void SystemThread::doRun(void)
 {
-	public:
-		Application(uint i, Mutex& s)
-			: Customer(mStack + sizeof(mStack))
-			, mI(i)
-			, mMtx(&s)
-		{ }
+	ScreensaverThread screensaver;
 
-	protected:
-		void doRun( ) override
-		{
-			char c = mI + '0';
+	screensaver.start();
+	screensaver.join();
 
-			while(true)
-			{
-				mMtx->lock();
+	{
+		Guard::Lock lock(GuardManager::instance());
 
-				for(uint i = 0 ; i < 10 ; ++i)
-				{
-					for(uint j = 0 ; j < 0x1000000 ; ++j);
-
-					kout << c << io::flush;
-				}
-
-				kout << io::endl;
-
-				mMtx->unlock();
-
-				Key k = KeyboardManager::instance().getc();
-
-				ASSERT(k.valid());
-
-				c = k.ascii();
-			}
-		}
-
-	private:
-		uint mI;
-		Mutex *mMtx;
-		uint8_t mStack[0x1000];
-};
+		SchedulerManager::instance().exit();
+	}
+}
 
 System::System(void)
 {
@@ -101,16 +65,91 @@ System::~System(void)
 	CPUManager::instance().halt();
 }
 
+using namespace dave;
+
 void System::run(void)
 {
-	u8 *screen = (u8 *) mboot_info_ptr->framebuffer_addr;
+	SystemThread sys;
 
-	for(uint i = 0 ; i < 0x10 ; ++i)
-	{
-		screen[i] = 0x11 * i;
-	}
+	ASSERT(mboot_info_ptr->mods_count > 0);
 
-	while(true);
+	initrd_root = (const initrd::Node *) (u64) ((mboot_module *) (u64) mboot_info_ptr->mods_addr)->mod_start;
+
+	GuardManager::instance().enter();
+
+	SchedulerManager::instance().add(sys);
+
+	PICManager::instance().enable(PIC::Device::TIMER);
+	PICManager::instance().enable(PIC::Device::KEYBOARD);
+
+	CPUManager::instance().enable_int();
+
+	SchedulerManager::instance().schedule();
+}
+
+//	kout << "Kernel loaded" << io::endl;
+//
+//	kout << (void *) (u64) mboot_info_ptr->flags << io::endl;
+//	kout << mboot_info_ptr->mods_count << " modules loaded " << (void *) (u64) mboot_info_ptr->mods_addr << io::endl;
+//
+//	ASSERT(mboot_info_ptr->mods_count > 0);
+//
+//	mboot_module *modules = (mboot_module *) (u64) mboot_info_ptr->mods_addr;
+//
+//	for(uint i = 0 ; i < mboot_info_ptr->mods_count ; ++i)
+//	{
+//		kout << "Module " << i << ": '" << (const char *) (u64) modules[i].string << "' sized " << (modules[i].mod_end - modules[i].mod_start) << "B" << io::endl;
+//	}
+//
+//	const initrd::Node *root = (const initrd::Node *) (u64) modules[0].mod_start;
+//
+//	print_info(root, 0);
+//
+//	kout << io::endl;
+//
+//	const initrd::Node *testf = root->find("sample/test.txt");
+//
+//	ASSERT(testf);
+//
+//	kout.write(testf->content(), testf->size());
+//
+//	kout << io::endl;
+//
+//	u8 *fb = (u8 *) (u64) mboot_info_ptr->framebuffer_addr;
+//
+//	Screen screen(fb, mboot_info_ptr->framebuffer_pitch);
+//	Texture tx(100, 100);
+//
+//	uint w = tx.width() - 1, h = tx.height() - 1;
+//
+//	for(uint y = 0 ; y < tx.height() ; ++y)
+//	{
+//		for(uint x = 0 ; x < tx.width() ; ++x)
+//		{
+//			tx.at(x, y) = tx.at(x, y) = 0xFF000000 | ((0xFF * x / w) << 16) | ((0xFF * y / h) << 8) | (0xFF * x * y / w / h);
+//		}
+//	}
+//
+//	int x = 0, y = 0;
+//	int max_x = Screen::WIDTH - tx.width(), max_y = Screen::HEIGHT - tx.height();
+//	int dx = 5, dy = 1;
+//
+//	while(true)
+//	{
+////		for(uint i = 0 ; i < 0x10000 ; ++i);
+//
+//		x += dx;
+//		y += dy;
+//
+//		if(x < 0 || x >= max_x) dx = -dx;
+//		if(y < 0 || y >= max_y) dy = -dy;
+//
+//		screen.clear();
+//		screen.buffer().fast_blt(tx, x, y);
+//		screen.sync();
+//	}
+//
+//	while(true);
 //	Mutex mutex;
 //
 //	Clock c1(1, 1, 10);
@@ -145,7 +184,6 @@ void System::run(void)
 //	CPUManager::instance().enable_int();
 //
 //	SchedulerManager::instance().schedule();
-}
 
 }
 

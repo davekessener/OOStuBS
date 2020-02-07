@@ -3,7 +3,42 @@
 
 #include "aux.h"
 
+#define MBOOT_FLAG_MEM (1<<0)
+#define MBOOT_FLAG_MODS (1<<3)
+
 extern "C" {
+
+struct mboot_aout
+{
+	u32 tabsize;
+	u32 strsize;
+	u32 addr;
+	u32 reserved;
+} __attribute__((packed));
+
+struct mboot_elf_header
+{
+	u32 num;
+	u32 size;
+	u32 addr;
+	u32 shndx;
+} __attribute__((packed));
+
+struct mboot_fb_palette
+{
+	u32 addr;
+	u16 num_colors;
+} __attribute__((packed));
+
+struct mboot_fb_color_rgb
+{
+	u8 red_pos;
+	u8 red_mask_size;
+	u8 green_pos;
+	u8 green_mask_size;
+	u8 blue_pos;
+	u8 blue_mask_size;
+} __attribute__((packed));
 
 struct mboot_info
 {
@@ -19,7 +54,11 @@ struct mboot_info
 	u32 mods_count;
 	u32 mods_addr;
 
-	u32 syms[3];
+	union
+	{
+		struct mboot_aout aout;
+		struct mboot_elf_header elf_header;
+	} syms;
 
 	u32 mmap_length;
 	u32 mmap_addr;
@@ -46,12 +85,29 @@ struct mboot_info
 	u32 framebuffer_height;
 	u8  framebuffer_bpp;
 	u8  framebuffer_type;
-	u8  color_info[5];
-};
+	union
+	{
+		struct mboot_fb_palette palette;
+		struct mboot_fb_color_rgb rgb;
+	} color_info;
+} __attribute__((packed));
+
+struct mboot_module
+{
+	u32 mod_start;
+	u32 mod_end;
+
+	u32 string;
+
+	u32 reserved;
+} __attribute__((packed));
 
 extern struct mboot_info *mboot_info_ptr;
 
 }
+
+static_assert(sizeof(mboot_info) == 116);
+static_assert(sizeof(mboot_module) == 16);
 
 #endif
 

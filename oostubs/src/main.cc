@@ -11,7 +11,7 @@
 
 #ifndef NOKERNEL
 
-volatile int gdb = 1;
+volatile int gdb = 0;
 
 int main(void)
 {
@@ -23,7 +23,7 @@ int main(void)
 	CPUManager::instance();
 	PICManager::instance();
 	PlugboxManager::instance();
-	Screen::instance();
+	ScreenManager::instance();
 
 	SystemManager::instance().run();
 

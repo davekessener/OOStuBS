@@ -6,7 +6,7 @@ namespace oostubs { namespace io {
 
 void CGAStream::doFlush(void)
 {
-	Screen::instance().wputs_n(data(), size());
+	ScreenManager::instance().wputs_n(data(), size());
 }
 
 void CGAStream::doPutc(Super::value_type c)

@@ -29,7 +29,7 @@ namespace oostubs
 	{
 		CPUManager::instance().disable_int();
 
-		Screen::instance().clear();
+		ScreenManager::instance().clear();
 
 		impl::panic_impl(
 			io::set_color(CGAScreen::Color::WHITE, CGAScreen::Color::RED),

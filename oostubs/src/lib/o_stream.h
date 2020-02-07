@@ -43,6 +43,8 @@ namespace oostubs
 				void fill(char f) { mFill = f; }
 				uint width( ) const { return mWidth; }
 				void width(uint w) { mWidth = w; }
+				void write(const char *p, uint c) { write((const u8 *) p, c); }
+				void write(const u8 *p, uint c) { while(c--) StringBuffer<N, T>::putc(*p++); }
 
 			private:
 				Format mFormat;

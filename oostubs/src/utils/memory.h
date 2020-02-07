@@ -3,6 +3,8 @@
 
 #include "mpl/singleton.h"
 
+#include "panic.h"
+
 namespace oostubs
 {
 	template<size_t N>
@@ -48,7 +50,7 @@ namespace oostubs
 			friend CreationPolicy;
 	};
 
-	typedef SimpleMemoryManager<0x100000>::Singleton MemoryManager;
+	typedef SimpleMemoryManager<0x4000000>::Singleton MemoryManager;
 
 	template<size_t N>
 	SimpleMemoryManager<N>::SimpleMemoryManager(void)
@@ -113,18 +115,15 @@ namespace oostubs
 
 			e = &entry(e->next);
 
-			if(e == &root)
-			{
-				// TODO error handling
-
-				return nullptr;
-			}
+			ASSERT(e != &root);
 		}
 	}
 
 	template<size_t N>
 	void SimpleMemoryManager<N>::free(void *p) noexcept
 	{
+		if(!p) return;
+
 		uint32_t a = from_address(p);
 		entry_t& d{entry(a)};
 		uint32_t o = endof(d);
@@ -217,7 +216,7 @@ namespace oostubs
 		}
 		while(e != &root);
 
-		// TODO error handling
+		PANIC("UNEXPECTED!");
 	}
 }
 

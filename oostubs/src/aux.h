@@ -39,6 +39,22 @@ namespace oostubs
 		TIMER = 0x20,
 		KEYBOARD = 0x21
 	};
+
+	template<typename A, typename B>
+	auto min(const A& a, const B& b) -> decltype(a + b)
+	{
+		typedef decltype(a + b) R;
+
+		return (a < b ? (R) a : (R) b);
+	};
+
+	template<typename A, typename B>
+	auto max(const A& a, const B& b) -> decltype(a + b)
+	{
+		typedef decltype(a + b) R;
+
+		return (a > b ? (R) a : (R) b);
+	};
 }
 
 #endif
