@@ -1,5 +1,6 @@
 #include "aux.h"
 #include "system.h"
+#include "mboot.h"
 
 #include "utils/shutdown_service.h"
 
@@ -10,9 +11,13 @@
 
 #ifndef NOKERNEL
 
+volatile int gdb = 1;
+
 int main(void)
 {
 	using namespace oostubs;
+
+	while(gdb);
 
 	ShutdownService::instance();
 	CPUManager::instance();

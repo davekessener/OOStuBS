@@ -1,6 +1,8 @@
 #include "system.h"
 
+#include "aux.h"
 #include "io.h"
+#include "mboot.h"
 
 #include "machine/plugbox.h"
 #include "machine/pic.h"
@@ -101,41 +103,48 @@ System::~System(void)
 
 void System::run(void)
 {
-	Mutex mutex;
+	u8 *screen = (u8 *) mboot_info_ptr->framebuffer_addr;
 
-	Clock c1(1, 1, 10);
-	Clock c2(2, 10, 6);
-	Clock c3(4, 60, 10);
-	Clock c4(5, 600, 6);
+	for(uint i = 0 ; i < 0x10 ; ++i)
+	{
+		screen[i] = 0x11 * i;
+	}
 
-	Application a1(1, mutex);
-	Application a2(2, mutex);
-	Application a3(3, mutex);
-
-	CGA_SCREEN[80 - 3] = 0x0F00 | ':';
-
-	GuardManager::instance().enter();
-
-	SchedulerManager::instance().add(a1);
-	SchedulerManager::instance().add(a2);
-	SchedulerManager::instance().add(a3);
-	SchedulerManager::instance().add(c1);
-	SchedulerManager::instance().add(c2);
-	SchedulerManager::instance().add(c3);
-	SchedulerManager::instance().add(c4);
-
-	realmode_info rmi;
-	toc_t toc;
-
-	enter_real(&rmi, &toc);
-	leave_real(&rmi, &toc);
-
-	PICManager::instance().enable(PIC::Device::TIMER);
-	PICManager::instance().enable(PIC::Device::KEYBOARD);
-
-	CPUManager::instance().enable_int();
-
-	SchedulerManager::instance().schedule();
+	while(true);
+//	Mutex mutex;
+//
+//	Clock c1(1, 1, 10);
+//	Clock c2(2, 10, 6);
+//	Clock c3(4, 60, 10);
+//	Clock c4(5, 600, 6);
+//
+//	Application a1(1, mutex);
+//	Application a2(2, mutex);
+//	Application a3(3, mutex);
+//
+//	CGA_SCREEN[80 - 3] = 0x0F00 | ':';
+//
+//	GuardManager::instance().enter();
+//
+//	SchedulerManager::instance().add(a1);
+//	SchedulerManager::instance().add(a2);
+//	SchedulerManager::instance().add(a3);
+//	SchedulerManager::instance().add(c1);
+//	SchedulerManager::instance().add(c2);
+//	SchedulerManager::instance().add(c3);
+//	SchedulerManager::instance().add(c4);
+//
+//	realmode_info rmi;
+//
+//	enter_real(&rmi);
+//	leave_real(&rmi);
+//
+//	PICManager::instance().enable(PIC::Device::TIMER);
+//	PICManager::instance().enable(PIC::Device::KEYBOARD);
+//
+//	CPUManager::instance().enable_int();
+//
+//	SchedulerManager::instance().schedule();
 }
 
 }

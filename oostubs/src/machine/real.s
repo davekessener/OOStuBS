@@ -1,26 +1,26 @@
-%include "machine/toc.inc"
+RMI_IDT equ 8
 
 [GLOBAL enter_real]
 [GLOBAL leave_real]
 
+[EXTERN idt_descr]
+
 [SECTION .text]
 
-; extern void enter_real(struct realmode_info *, struct toc *)
+; extern void enter_real(struct realmode_info *)
 enter_real:
 	cli
 
-	save_to_toc rsi
+	sidt [rdi+RMI_IDT]
 
-	sidt [rdi+8]
-
-	mov ax,[rdi]
-	mov ss,ax
-	mov esp,[rdi+2]
-	mov ax,[rdi+6]
-	mov ds,ax
-	mov es,ax
-	mov gs,ax
-	mov fs,ax
+;	mov ax,[rdi]
+;	mov ss,ax
+;	mov esp,[rdi+2]
+;	mov ax,[rdi+6]
+;	mov ds,ax
+;	mov es,ax
+;	mov gs,ax
+;	mov fs,ax
 
 	mov rax,cr0
 	and eax,0x7FFFFFFE
@@ -34,23 +34,29 @@ enter_real:
 	mov ebx,0
 	lidt [ebx]
 
+	mov ax,0
+	mov es,ax
+	mov ax,0x4F00
+	sti
+	int 0x10
+
 	ret
 
 
 ; extern void leave_real(struct realmode_info *, struct toc *)
 leave_real:
-[BITS 32]
-	lidt [edi+6]
+	lidt [idt_descr]
 
 	mov ecx,0xC0000080
 	rdmsr
 	or eax,0x00000100
 	wrmsr
 
-	mov eax,cr0
+	mov rax,cr0
 	or eax,0x80000001
-	mov cr0,eax
+	mov cr0,rax
 
+[BITS 32]
 	jmp 2 * 0x8 : .longmode_start
 
 .longmode_start:

@@ -8,6 +8,11 @@
 typedef unsigned uint;
 typedef decltype(sizeof(0)) size_t;
 
+typedef uint8_t  u8;
+typedef uint16_t u16;
+typedef uint32_t u32;
+typedef uint64_t u64;
+
 inline void *operator new(size_t, void *p)
 {
 	return p;

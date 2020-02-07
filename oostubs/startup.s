@@ -29,12 +29,13 @@ MAX_MEM: equ 254
 ; Multiboot-Konstanten
 MULTIBOOT_PAGE_ALIGN     equ   1<<0
 MULTIBOOT_MEMORY_INFO    equ   1<<1
+MULTIBOOT_GRAPHMODE      equ   1<<2
 
 ; Magic Number fuer Multiboot
 MULTIBOOT_HEADER_MAGIC   equ   0x1badb002
 
 ; Multiboot-Flags (ELF-spezifisch!)
-MULTIBOOT_HEADER_FLAGS   equ   MULTIBOOT_PAGE_ALIGN | MULTIBOOT_MEMORY_INFO
+MULTIBOOT_HEADER_FLAGS   equ   MULTIBOOT_PAGE_ALIGN | MULTIBOOT_MEMORY_INFO | MULTIBOOT_GRAPHMODE
 MULTIBOOT_HEADER_CHKSUM  equ   -(MULTIBOOT_HEADER_MAGIC + MULTIBOOT_HEADER_FLAGS)
 MULTIBOOT_EAX_MAGIC      equ   0x2badb002
 
@@ -53,6 +54,8 @@ pagetable_end:  equ 0x200000
 ; Von uns bereitgestellte Funktionen
 [GLOBAL startup]
 [GLOBAL idt]
+[GLOBAL idt_descr]
+[GLOBAL mboot_info_ptr]
 [GLOBAL __cxa_pure_virtual]
 [GLOBAL _ZdlPv]
 [GLOBAL _ZdlPvj]
@@ -97,9 +100,9 @@ pagetable_end:  equ 0x200000
 	dd 0 ; bss_end_addr (wird ignoriert)
 	dd 0 ; entry_addr (wird ignoriert)
 	dd 0 ; mode_type (wird ignoriert)
-	dd 0 ; width (wird ignoriert)
-	dd 0 ; height (wird ignoriert)
-	dd 0 ; depth (wird ignoriert)
+	dd 800 ; width
+	dd 600 ; height
+	dd 32  ; depth
 
 ;
 ;  GRUB Einsprungspunkt
@@ -109,6 +112,8 @@ startup:
 	cld              ; GCC-kompilierter Code erwartet das so
 	cli              ; Interrupts ausschalten
 	lgdt   [gdt_80]  ; Neue Segmentdeskriptoren setzen
+
+	mov [mboot_info_ptr],ebx
 
 	; Globales Datensegment
 	mov    eax, 3 * 0x8
@@ -483,6 +488,9 @@ idt_entry i
 idt_descr:
 	dw  256*8 - 1    ; 256 Einträge
 	dq idt
+
+mboot_info_ptr:
+	dq 0
 
 [SECTION .bss]
 

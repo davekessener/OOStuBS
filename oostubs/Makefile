@@ -96,6 +96,11 @@ all: bootdisk.iso
 	cp bootdisk.iso ~/shared/
 	cp $(ISO_DIR)/boot/system ~/shared/
 
+initrd/mkinitrd: $(shell find initrd)
+	$(MAKE) -C initrd/
+
+$(BIN_DIR)/initrd.bin: initrd/mkinitrd $(shell find 
+
 # --------------------------------------------------------------------------
 # Regeln zur Erzeugung der Abhaengigkeitsdateien
 

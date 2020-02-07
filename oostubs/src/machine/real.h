@@ -1,8 +1,6 @@
 #ifndef OOSTUBS_MACHINE_REAL_H
 #define OOSTUBS_MACHINE_REAL_H
 
-#include "machine/toc.h"
-
 extern "C" {
 
 struct realmode_info
@@ -13,8 +11,8 @@ struct realmode_info
 	uint8_t gdt[10];
 };
 
-extern void enter_real(struct realmode_info *, struct toc *);
-extern void leave_real(struct realmode_info *, struct toc *);
+void enter_real(struct realmode_info *);
+void leave_real(struct realmode_info *);
 
 }
 

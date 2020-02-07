@@ -1,0 +1,3 @@
+[submodule "oostubs/initrd"]
+	path = oostubs/initrd
+	url = https://github.com/davekessener/initrd.git
