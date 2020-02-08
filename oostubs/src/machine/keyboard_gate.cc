@@ -7,21 +7,23 @@
 
 namespace oostubs {
 
+KeyboardGate::KeyboardGate(void)
+	: Gate(true)
+{
+}
+
 void KeyboardGate::doPrologue(uint slot)
 {
-	mKey = KeyboardControllerManager::instance().key_hit();
-
-	if(mKey.valid() && mKey.scancode() == Key::scan_code::DEL && mKey.alt() && mKey.ctrl())
-	{
-		KeyboardControllerManager::instance().reboot();
-	}
 }
 
 void KeyboardGate::doEpilogue(void)
 {
-	Key k = mKey;
+	Key k = KeyboardControllerManager::instance().key_hit();
 
-	mKey = {};
+	if(k.valid() && k.scancode() == Key::scan_code::DEL && k.alt() && k.ctrl())
+	{
+		KeyboardControllerManager::instance().reboot();
+	}
 
 	if(k.valid())
 	{

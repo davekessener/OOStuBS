@@ -7,8 +7,10 @@
 namespace oostubs {
 
 Keyboard::Keyboard(void)
+	: mBuffer(true)
 {
 	PlugboxManager::instance().assign(IRQ::KEYBOARD, this);
+	PlugboxManager::instance().assign(IRQ::MOUSE, this);
 }
 
 Key Keyboard::getc(void)

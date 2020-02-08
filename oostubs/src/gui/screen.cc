@@ -2,12 +2,27 @@
 
 #include "lib/memory.h"
 
+#include "mboot.h"
+
 namespace oostubs {
 
-Screen::Screen(void *fb, uint p)
-	: mBuffer((p % sizeof(u32)) ? WIDTH : (p/sizeof(u32)), HEIGHT)
-	, mFramebuffer((u8 *) fb)
-	, mPitch((p % sizeof(u32)) ? p : 0)
+namespace
+{
+	inline u8 *framebuffer(void)
+	{
+		return (u8 *) (u64) mboot_info_ptr->framebuffer_addr;
+	}
+
+	inline uint pitch(void)
+	{
+		return mboot_info_ptr->framebuffer_pitch;
+	}
+}
+
+Screen::Screen(void)
+	: mBuffer((pitch() % sizeof(u32)) ? WIDTH : (pitch() / sizeof(u32)), HEIGHT)
+	, mFramebuffer(framebuffer())
+	, mPitch((pitch() % sizeof(u32)) ? pitch() : 0)
 {
 	sync();
 }

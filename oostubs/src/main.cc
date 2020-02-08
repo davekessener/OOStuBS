@@ -23,7 +23,6 @@ int main(void)
 	CPUManager::instance();
 	PICManager::instance();
 	PlugboxManager::instance();
-	ScreenManager::instance();
 
 	SystemManager::instance().run();
 

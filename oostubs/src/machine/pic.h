@@ -14,9 +14,10 @@ namespace oostubs
 		public:
 		enum class Device : uint16_t
 		{
-			TIMER = 0x01,
-			KEYBOARD = 0x02,
-			CASCADE = 0x04
+			TIMER = (1<<0),
+			KEYBOARD = (1<<1),
+			CASCADE = (1<<2),
+			MOUSE = (1<<12)
 		};
 
 		class Lock
@@ -45,6 +46,8 @@ namespace oostubs
 
 		private:
 			PIC(const PIC&) = delete;
+
+			void update(bool);
 
 			uint16_t mMask;
 			IO_Port mIMR_M, mIMR_S;

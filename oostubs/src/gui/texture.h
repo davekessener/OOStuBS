@@ -12,9 +12,10 @@ namespace oostubs
 			Texture(Texture&& tx) : mTexture(tx.mTexture), mWidth(tx.mWidth), mHeight(tx.mHeight) { tx.mTexture = nullptr; }
 			~Texture( );
 
-			void fast_blt(const Texture& src, int dx, int dy) { fast_blt(src, 0, 0, src.width(), src.height(), dx, dy); }
-			void fast_blt(const Texture&, int, int, uint, uint, int, int);
-			void unchecked_blt(const Texture&, int, int, uint, uint, int, int);
+			void blt(const Texture& src, int dx, int dy, bool a = true)
+				{ blt(src, 0, 0, src.width(), src.height(), dx, dy, a); }
+			void blt(const Texture&, int, int, uint, uint, int, int, bool = true);
+			void unchecked_blt(const Texture&, int, int, uint, uint, int, int, bool = true);
 
 			u32 *begin( ) { return mTexture; }
 			u32 *end( ) { return mTexture + mWidth * mHeight; }

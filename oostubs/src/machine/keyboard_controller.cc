@@ -1,6 +1,9 @@
 #include "machine/keyboard_controller.h"
 
 #include "machine/pic.h"
+#include "machine/guard.h"
+
+#include "panic.h"
 
 namespace oostubs {
 
@@ -65,6 +68,19 @@ unsigned char KeyboardController::scan_num_tab[] =
 };
 
 /* PRIVATE METHODEN */
+
+KeyboardController::KeyboardController(void)
+	: mCtrlPort(Port::KB_CTRL)
+	, mDataPort(Port::KB_DATA)
+{
+	// alle LEDs ausschalten(bei vielen PCs ist NumLock nach dem Booten an)
+	set_led(KeyboardData::LED::CAPS_LOCK, false);
+	set_led(KeyboardData::LED::SCROLL_LOCK, false);
+	set_led(KeyboardData::LED::NUM_LOCK, false);
+	
+	// maximale Geschwindigkeit, minimale Verzoegerung
+	set_repeat_rate(0, 0);  
+}
 
 // KEY_DECODED: Interpretiert die Make und Break-Codes der Tastatur und
 //              liefert den ASCII Code, den Scancode und Informationen
@@ -282,18 +298,6 @@ void KeyboardController::get_ascii_code()
 //                      ausgeschaltet und die Wiederholungsrate auf
 //                      maximale Geschwindigkeit eingestellt.
 
-KeyboardController::KeyboardController(void)
-	: mCtrlPort(0x64), mDataPort(0x60)
-{
-	// alle LEDs ausschalten(bei vielen PCs ist NumLock nach dem Booten an)
-	set_led(KeyboardData::LED::CAPS_LOCK, false);
-	set_led(KeyboardData::LED::SCROLL_LOCK, false);
-	set_led(KeyboardData::LED::NUM_LOCK, false);
-	
-	// maximale Geschwindigkeit, minimale Verzoegerung
-	set_repeat_rate(0, 0);  
-}
-
 // REBOOT: Fuehrt einen Neustart des Rechners durch. Ja, beim PC macht
 //         das der Tastaturcontroller.
 void KeyboardController::reboot(void)
@@ -315,18 +319,6 @@ void KeyboardController::reboot(void)
 	while(status & inpb);   // verarbeitet wurde.
 
 	mCtrlPort.outb(cpu_reset);        // Reset
-}
-
-void KeyboardController::wait_for_port_empty(void)
-{
-	while(mCtrlPort.inb() & inpb);
-}
-
-void KeyboardController::wait_for_ack(void)
-{
-	wait_for_port_empty();
-	while(!(mCtrlPort.inb() & outb));
-	while(!(mDataPort.inb() & kbd_reply::ack));
 }
 
 // SET_REPEAT_RATE: Funktion zum Einstellen der Wiederholungsrate der
@@ -388,18 +380,77 @@ Key KeyboardController::key_hit(void)
 
 	auto f = mCtrlPort.inb();
 
-	if((f & outb) && !(f & auxb))
+	if(f & outb)
 	{
-		mCode = mDataPort.inb();
-
-		if(key_decoded())
+		if(f & auxb)
 		{
-			r = mGather;
-			mGather = {};
+			u8 status = mDataPort.inb();
+			u8 dx = mDataPort.inb();
+			u8 dy = mDataPort.inb();
+
+			kout << "Mouse event: " << (void *) (u64) ((status << 16) | (dx << 8) | dy) << io::endl;
+		}
+		else
+		{
+			mCode = mDataPort.inb();
+
+			if(key_decoded())
+			{
+				r = mGather;
+			}
 		}
 	}
 
 	return r;
+}
+
+void KeyboardController::install_mouse(void)
+{
+	Guard::Lock lock1(GuardManager::instance());
+	PIC::Lock lock2(PICManager::instance(), PIC::Device::KEYBOARD);
+
+	wait_for_port_empty();
+	mCtrlPort.outb(0xA8);
+
+	wait_for_port_empty();
+	mCtrlPort.outb(0x20);
+	while(!(mCtrlPort.inb() & outb));
+	u8 status = mDataPort.inb();
+	kout << "status " << status << io::endl;
+	wait_for_port_empty();
+	mCtrlPort.outb(0x60);
+	wait_for_port_empty();
+	mDataPort.outb((status & ~4) | 2);
+
+	mouse_write(0xF6);
+	mouse_write(0xF4);
+}
+
+void KeyboardController::mouse_write(u8 v)
+{
+	wait_for_port_empty();
+	mCtrlPort.outb(0xD4);
+	wait_for_port_empty();
+	mDataPort.outb(v);
+	wait_for_ack();
+}
+
+#define LIMIT(c) \
+do { for(uint the_counter_ = 1000 ; true ; --the_counter_) { \
+	if(!(c)) break; \
+	if(!the_counter_) PANIC("CONDITION ", #c , " FAILED!"); \
+} } while(false)
+
+void KeyboardController::wait_for_port_empty(void)
+{
+	LIMIT(mCtrlPort.inb() & inpb);
+}
+
+void KeyboardController::wait_for_ack(void)
+{
+	wait_for_port_empty();
+	LIMIT(!(mCtrlPort.inb() & outb));
+	LIMIT(!(mDataPort.inb() & kbd_reply::ack));
 }
 
 }

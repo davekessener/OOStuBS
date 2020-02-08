@@ -20,7 +20,6 @@ void ScreensaverThread::execute(void)
 {
 	int w = mboot_info_ptr->framebuffer_width;
 	int h = mboot_info_ptr->framebuffer_height;
-	u8 *fb = (u8 *) (u64) mboot_info_ptr->framebuffer_addr;
 
 	if(!w) w = Screen::WIDTH;
 	if(!h) h = Screen::HEIGHT;
@@ -30,7 +29,7 @@ void ScreensaverThread::execute(void)
 	Texture ball(2 * r, 2 * r);
 	Texture icon{dif_load_from_file(initrd_root->find("textures/diablo.dif"))};
 
-	Screen screen(fb, mboot_info_ptr->framebuffer_pitch);
+	Screen& screen{FramebufferManager::instance()};
 
 	for(int y = 0 ; y < h ; ++y)
 	{
@@ -57,9 +56,9 @@ void ScreensaverThread::execute(void)
 	int x = 0, y = 0;
 	while(true)
 	{
-		screen.buffer().fast_blt(bg, 0, 0);
-		screen.buffer().fast_blt(icon, (w - icon.width()) / 2, (h - icon.height()) / 2);
-		screen.buffer().fast_blt(ball, x, y);
+		screen.buffer().blt(bg, 0, 0);
+		screen.buffer().blt(icon, (w - icon.width()) / 2, (h - icon.height()) / 2);
+		screen.buffer().blt(ball, x, y);
 
 		x += dx;
 		y += dy;

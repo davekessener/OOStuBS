@@ -19,7 +19,7 @@ void PIC::enable(Device d)
 
 		mMask &= ~v;
 
-		((v & 0xFF) ? mIMR_M : mIMR_S).outb(mMask);
+		update(v & 0xFF);
 	}
 }
 
@@ -31,8 +31,13 @@ void PIC::disable(Device d)
 
 		mMask |= v;
 
-		((v & 0xFF) ? mIMR_M : mIMR_S).outb(mMask);
+		update(v & 0xFF);
 	}
+}
+
+void PIC::update(bool m)
+{
+	(m ? mIMR_M : mIMR_S).outb(m ? mMask : (mMask >> 8));
 }
 
 }

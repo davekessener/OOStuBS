@@ -27,7 +27,7 @@ namespace oostubs
 		static constexpr size_t SIZE = N;
 
 		public:
-			FixedRingbuffer( ) : mReadIdx(0), mWriteIdx(0) { }
+			explicit FixedRingbuffer(bool ow = false) : mReadIdx(0), mWriteIdx(0), mOverwrite(ow) { }
 			
 			void push(const_reference);
 			value_type pop( );
@@ -40,12 +40,23 @@ namespace oostubs
 		private:
 			value_type mContent[N+1];
 			uint mReadIdx, mWriteIdx;
+			bool mOverwrite;
 	};
 
 	template<typename T, size_t N>
 	void FixedRingbuffer<T, N>::push(const_reference v)
 	{
-		ASSERT(!full());
+		if(!mOverwrite)
+		{
+			ASSERT(!full());
+		}
+		else
+		{
+			if(full())
+			{
+				pop();
+			}
+		}
 
 		mContent[mWriteIdx] = v;
 		mWriteIdx = (mWriteIdx + 1) % (N+1);

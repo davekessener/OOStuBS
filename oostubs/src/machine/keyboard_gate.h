@@ -6,19 +6,16 @@
 
 namespace oostubs
 {
-	class KeyboardGate : public DeviceGate
+	class KeyboardGate : public Gate
 	{
 		public:
-			KeyboardGate( ) : DeviceGate(PIC::Device::KEYBOARD, true) { }
+			KeyboardGate( );
 
 		protected:
 			void doPrologue(uint) override;
 			void doEpilogue( ) override;
 
 			virtual void onKeyHit(Key) = 0;
-
-		private:
-			Key mKey;
 	};
 }
 

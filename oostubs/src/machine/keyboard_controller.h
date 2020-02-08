@@ -23,11 +23,12 @@ namespace oostubs
 		public:
 		typedef mpl::SingletonHolder<KeyboardController> Singleton;
 
-			KeyboardController();
+			KeyboardController( );
 			
-			Key key_hit();
-			Key get_key();
-			void reboot();
+			Key key_hit( );
+			Key get_key( );
+			void reboot( );
+			void install_mouse( );
 
 			void set_repeat_rate(int speed, int delay);
 			void set_led(KeyboardData::LED, bool);
@@ -40,6 +41,7 @@ namespace oostubs
 			void get_ascii_code();
 			void wait_for_port_empty();
 			void wait_for_ack();
+			void mouse_write(u8);
 	
 		private:
 			unsigned char mCode;

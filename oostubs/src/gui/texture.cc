@@ -20,7 +20,7 @@ Texture::~Texture(void)
 	mTexture = nullptr;
 }
 
-void Texture::fast_blt(const Texture& src, int sx, int sy, uint w, uint h, int dx, int dy)
+void Texture::blt(const Texture& src, int sx, int sy, uint w, uint h, int dx, int dy, bool a)
 {
 	int tw = w, th = h;
 	int sw = src.width(), sh = src.height();
@@ -76,21 +76,34 @@ void Texture::fast_blt(const Texture& src, int sx, int sy, uint w, uint h, int d
 	if(tw <= 0 || th <= 0)
 		return;
 	
-	unchecked_blt(src, sx, sy, tw, th, dx, dy);
+	unchecked_blt(src, sx, sy, tw, th, dx, dy, a);
 }
 
-void Texture::unchecked_blt(const Texture& src, int sx, int sy, uint w, uint h, int dx, int dy)
+void Texture::unchecked_blt(const Texture& src, int sx, int sy, uint w, uint h, int dx, int dy, bool alpha)
 {
-	for(uint cy = 0 ; cy < h ; ++cy)
+	if(alpha)
 	{
-		for(uint cx = 0 ; cx < w ; ++cx)
+		for(uint cy = 0 ; cy < h ; ++cy)
 		{
-			u32 v = src.at(sx + cx, sy + cy);
-
-			if(v & FLAG_ALPHA)
+			for(uint cx = 0 ; cx < w ; ++cx)
 			{
-				at(dx + cx, dy + cy) = v;
+				u32 v = src.at(sx + cx, sy + cy);
+
+				if(v & FLAG_ALPHA)
+				{
+					at(dx + cx, dy + cy) = v;
+				}
 			}
+		}
+	}
+	else
+	{
+		for(uint cy = 0 ; cy < h ; ++cy)
+		{
+			const u8 *p1 = (const u8 *) &src.at(sx, sy + cy);
+			u8 *p2 = (u8 *) &at(dx, dy + cy);
+
+			memmove(p2, p1, w * sizeof(u32));
 		}
 	}
 }

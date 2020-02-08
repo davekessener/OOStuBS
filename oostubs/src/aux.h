@@ -31,13 +31,16 @@ namespace oostubs
 		PIT1_COUNT0 = 0x40,
 		PIT1_COUNT1 = 0x41,
 		PIT1_COUNT2 = 0x42,
-		PIT1_CTRL = 0x43
+		PIT1_CTRL = 0x43,
+		KB_CTRL = 0x64,
+		KB_DATA = 0x60
 	};
 
 	enum class IRQ : uint8_t
 	{
 		TIMER = 0x20,
-		KEYBOARD = 0x21
+		KEYBOARD = 0x21,
+		MOUSE = 0x2C
 	};
 
 	template<typename A, typename B>

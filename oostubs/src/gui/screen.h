@@ -5,6 +5,8 @@
 
 #include "gui/texture.h"
 
+#include "mpl/singleton.h"
+
 namespace oostubs
 {
 	class Screen
@@ -13,10 +15,9 @@ namespace oostubs
 		static constexpr size_t WIDTH = 800, HEIGHT = 600;
 
 		public:
-			Screen(void *, uint);
+			Screen( );
 
 			void sync( );
-
 			void clear( );
 
 			Texture& buffer( ) { return mBuffer; }
@@ -26,6 +27,8 @@ namespace oostubs
 			u8 *mFramebuffer;
 			uint mPitch;
 	};
+
+	typedef mpl::SingletonHolder<Screen> FramebufferManager;
 }
 
 #endif

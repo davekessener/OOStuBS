@@ -49,6 +49,7 @@ namespace oostubs
 
 		public:
 			CGAScreen( );
+
 			void setCursor(uint, uint);
 			void getCursor(uint *, uint *);
 			void putc(char, attrib_t = DEFAULT_ATTRIBUTE);

@@ -234,5 +234,5 @@ ifneq ($(MAKECMDGOALS),clean)
 -include $(DEP_FILES)
 endif
 
-.PHONY: clean bootdisk gdb ddd qemu qemu-smp qemu-gdb objects
+.PHONY: all clean bootdisk gdb ddd qemu qemu-smp qemu-gdb objects
 

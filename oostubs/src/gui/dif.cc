@@ -27,7 +27,7 @@ Texture dif_load_from_file(const initrd::Node *f)
 	{
 		for(uint x = 0 ; x < w ; ++x)
 		{
-			tx.at(x, y) = image[x + y * w];
+			tx.at(x, y) = image[y + x * h];
 		}
 	}
 
