@@ -239,7 +239,7 @@ namespace oostubs
 			{
 				uint d = v % base;
 
-				*--p = static_cast<char>(d + (d < 10 ? '0' : ('a' - 10)));
+				*--p = static_cast<char>(d + (d < 10 ? '0' : ('A' - 10)));
 				v /= base;
 			}
 

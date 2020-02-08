@@ -11,6 +11,7 @@
 #include "machine/guard.h"
 #include "machine/real.h"
 #include "machine/keyboard_controller.h"
+#include "machine/soundcard_controller.h"
 
 #include "thread/customer.h"
 #include "thread/semaphore.h"
@@ -48,13 +49,11 @@ void SystemThread::doRun(void)
 {
 	FramebufferManager::instance();
 
-	ScreensaverThread screensaver;
-//	Monitor monitor;
+	ScreensaverThread app;
+//	Monitor app;
 
-	Thread *app = &screensaver;
-
-	app->start();
-	app->join();
+	app.start();
+	app.join();
 
 	{
 		Guard::Lock lock(GuardManager::instance());
@@ -85,6 +84,7 @@ void System::run(void)
 	initrd_root = (const initrd::Node *) (u64) ((mboot_module *) (u64) mboot_info_ptr->mods_addr)->mod_start;
 
 	KeyboardControllerManager::instance();
+	SoundcardControllerManager::instance();
 
 	GuardManager::instance().enter();
 

@@ -2,6 +2,8 @@
 
 #include "mboot.h"
 
+#include "machine/soundcard_controller.h"
+
 #include "gui/texture.h"
 #include "gui/screen.h"
 #include "gui/dif.h"
@@ -54,6 +56,13 @@ void ScreensaverThread::execute(void)
 				ball.at(x, y) = rgb(0xFF, 0xFF, 0xFF);
 			}
 		}
+	}
+
+	if(SoundcardControllerManager::instance().is_present())
+	{
+		Texture sound{dif_load_from_file(initrd_root->find("textures/sound.dif"))};
+
+		bg.blend_blt(sound, 16, bg.height() - sound.height() - 16);
 	}
 
 	int dx = 9, dy = 2;

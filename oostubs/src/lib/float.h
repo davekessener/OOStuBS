@@ -5,6 +5,8 @@
 
 #include "lib/o_stream.h"
 
+#define double ::oostubs::Double
+
 namespace oostubs
 {
 	class Double
@@ -44,6 +46,13 @@ namespace oostubs
 			uint64_t mantissa( ) const { return (mData & BM_M) >> BO_M; }
 	
 			explicit operator int64_t( ) const;
+			explicit operator int32_t( ) const { return (i32) static_cast<int64_t>(*this); }
+			explicit operator int16_t( ) const { return (i16) static_cast<int64_t>(*this); }
+			explicit operator int8_t( ) const { return (i8) static_cast<int64_t>(*this); }
+			explicit operator uint64_t( ) const { return (u64) static_cast<int64_t>(*this); }
+			explicit operator uint32_t( ) const { return (u32) static_cast<int64_t>(*this); }
+			explicit operator uint16_t( ) const { return (u16) static_cast<int64_t>(*this); }
+			explicit operator uint8_t( ) const { return (u8) static_cast<int64_t>(*this); }
 	
 			Double round(uint) const;
 	

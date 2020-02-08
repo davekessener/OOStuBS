@@ -1,5 +1,7 @@
 #include "app/monitor.h"
 
+#include "machine/soundcard_controller.h"
+
 #include "io.h"
 
 #include "user/keyboard.h"
@@ -14,6 +16,8 @@ void Monitor::execute(void)
 //	auto& kb{KeyboardManager::instance()};
 
 	auto& mouse{MouseManager::instance()};
+
+	SoundcardControllerManager::instance();
 
 	while(true)
 	{

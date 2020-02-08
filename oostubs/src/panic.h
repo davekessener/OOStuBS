@@ -8,6 +8,11 @@
 
 #define PANIC(...) ::oostubs::panic(__FILE__, __LINE__, __VA_ARGS__)
 #define ASSERT(c) do { if(!(c)) { PANIC("ASSERTION FAILED: " #c ); } } while(false)
+#define TRY_FOR(n,c) \
+do { for(volatile uint the_counter_ = (n) ; true ; --the_counter_) { \
+	if(!(c)) break; \
+	if(!the_counter_) PANIC("CONDITION ", #c , " FAILED!"); \
+} } while(false)
 
 namespace oostubs
 {

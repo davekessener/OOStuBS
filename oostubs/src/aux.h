@@ -3,8 +3,6 @@
 
 #include <stdint.h>
 
-#define double ::oostubs::Double
-
 typedef unsigned uint;
 typedef decltype(sizeof(0)) size_t;
 
@@ -27,18 +25,22 @@ namespace oostubs
 {
 	enum class Port : uint16_t
 	{
-		CGA_CTRL = 0x03D4,
-		CGA_DATA = 0x03D5,
-		PIC_CTRL_M = 0x20,
-		PIC_DATA_M = 0x21,
-		PIC_CTRL_S = 0xA0,
-		PIC_DATA_S = 0xA1,
-		PIT1_COUNT0 = 0x40,
-		PIT1_COUNT1 = 0x41,
-		PIT1_COUNT2 = 0x42,
-		PIT1_CTRL = 0x43,
-		KB_CTRL = 0x64,
-		KB_DATA = 0x60
+		CGA_CTRL    = 0x03D4,
+		CGA_DATA    = 0x03D5,
+		PIC_CTRL_M  = 0x0020,
+		PIC_DATA_M  = 0x0021,
+		PIC_CTRL_S  = 0x00A0,
+		PIC_DATA_S  = 0x00A1,
+		PIT1_COUNT0 = 0x0040,
+		PIT1_COUNT1 = 0x0041,
+		PIT1_COUNT2 = 0x0042,
+		PIT1_CTRL   = 0x0043,
+		KB_CTRL     = 0x0064,
+		KB_DATA     = 0x0060,
+		DSP_RESET   = 0x0226,
+		DSP_READ    = 0x022A,
+		DSP_WRITE   = 0x022C,
+		DSP_ACK     = 0x022E
 	};
 
 	enum class IRQ : uint8_t
@@ -63,6 +65,8 @@ namespace oostubs
 
 		return (a > b ? (R) a : (R) b);
 	};
+
+	inline void idle_for(volatile uint n) { while(n--); }
 }
 
 #endif

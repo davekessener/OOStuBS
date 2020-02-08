@@ -452,22 +452,16 @@ void KeyboardController::mouse_write(u8 v)
 	wait_for_ack();
 }
 
-#define LIMIT(c) \
-do { for(uint the_counter_ = 1000 ; true ; --the_counter_) { \
-	if(!(c)) break; \
-	if(!the_counter_) PANIC("CONDITION ", #c , " FAILED!"); \
-} } while(false)
-
 void KeyboardController::wait_for_port_empty(void)
 {
-	LIMIT(mCtrlPort.inb() & inpb);
+	TRY_FOR(1000, mCtrlPort.inb() & inpb);
 }
 
 void KeyboardController::wait_for_ack(void)
 {
 	wait_for_port_empty();
-	LIMIT(!(mCtrlPort.inb() & outb));
-	LIMIT(!(mDataPort.inb() & kbd_reply::ack));
+	TRY_FOR(1000, !(mCtrlPort.inb() & outb));
+	TRY_FOR(1000, !(mDataPort.inb() & kbd_reply::ack));
 }
 
 }

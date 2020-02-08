@@ -72,7 +72,7 @@ void Terminal::putc_impl(char c)
 {
 	putc_impl(mCX, mCY, c);
 
-	if(++mCX == WIDTH)
+	if(c != '\n' && ++mCX == WIDTH)
 	{
 		mCY = 0;
 
