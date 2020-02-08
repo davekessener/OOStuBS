@@ -108,5 +108,25 @@ void Texture::unchecked_blt(const Texture& src, int sx, int sy, uint w, uint h, 
 	}
 }
 
+void Texture::fill_rect(uint x, uint y, uint w, uint h, u32 c)
+{
+	if(x >= mWidth || y >= mHeight)
+		return;
+	
+	if(!w || !h)
+		return;
+	
+	if(x + w > mWidth) w = mWidth - x;
+	if(y + h > mHeight) h = mHeight - y;
+
+	for(uint dy = 0 ; dy < h ; ++dy)
+	{
+		for(uint dx = 0 ; dx < w ; ++dx)
+		{
+			at(x + dx, y + dy) = c;
+		}
+	}
+}
+
 }
 

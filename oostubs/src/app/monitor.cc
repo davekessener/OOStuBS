@@ -3,27 +3,23 @@
 #include "io.h"
 
 #include "user/keyboard.h"
+#include "user/mouse.h"
 
 namespace oostubs {
-
-void sleepms()
-{ 
-	for(uint i = 0 ; i < 0x1000 ; ++i);
-}
 
 void Monitor::execute(void)
 {
 	kout << "Hello, World!" << io::endl;
 
-	auto& kb{KeyboardManager::instance()};
+//	auto& kb{KeyboardManager::instance()};
 
-	KeyboardControllerManager::instance().install_mouse();
-
-	kout << "Installed mouse!" << io::endl;
+	auto& mouse{MouseManager::instance()};
 
 	while(true)
 	{
-		kout << kb.getc().ascii() << io::flush;
+		for(uint i = 0 ; i < 0x100000 ; );
+
+		kout << "@(" << mouse.position().x << ", " << mouse.position().y << ")" << io::endl;
 	}
 }
 

@@ -2,32 +2,41 @@
 
 #include "machine/keyboard_controller.h"
 #include "machine/cga_screen.h"
+#include "machine/plugbox.h"
 
-#include "io.h"
+#include "user/keyboard.h"
+#include "user/mouse.h"
 
 namespace oostubs {
 
 KeyboardGate::KeyboardGate(void)
 	: Gate(true)
 {
-}
-
-void KeyboardGate::doPrologue(uint slot)
-{
+	PlugboxManager::instance().assign(IRQ::KEYBOARD, this);
+	PlugboxManager::instance().assign(IRQ::MOUSE, this);
 }
 
 void KeyboardGate::doEpilogue(void)
 {
-	Key k = KeyboardControllerManager::instance().key_hit();
+	KeyboardController::Response r;
 
-	if(k.valid() && k.scancode() == Key::scan_code::DEL && k.alt() && k.ctrl())
+	if(KeyboardControllerManager::instance().key_hit(&r))
 	{
-		KeyboardControllerManager::instance().reboot();
-	}
+		if(r.is_mouse)
+		{
+			MouseManager::instance().accept(r.mouse.pressed, r.mouse.dx, r.mouse.dy);
+		}
+		else
+		{
+			ASSERT(r.key.valid());
 
-	if(k.valid())
-	{
-		onKeyHit(k);
+			if(r.key.scancode() == Key::scan_code::DEL && r.key.alt() && r.key.ctrl())
+			{
+				KeyboardControllerManager::instance().reboot();
+			}
+
+			KeyboardManager::instance().accept(r.key);
+		}
 	}
 }
 

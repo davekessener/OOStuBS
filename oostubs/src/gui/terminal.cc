@@ -65,6 +65,7 @@ void Terminal::scroll_impl(void)
 	if(mCY) --mCY;
 
 	screen.blt(screen, 0, CHARH, screen.width(), screen.height() - CHARH, 0, 0, false);
+	screen.fill_rect(0, screen.height() - CHARH, screen.width(), CHARH, 0x00000000);
 }
 
 void Terminal::putc_impl(char c)

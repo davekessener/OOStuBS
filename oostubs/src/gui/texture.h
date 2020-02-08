@@ -17,6 +17,8 @@ namespace oostubs
 			void blt(const Texture&, int, int, uint, uint, int, int, bool = true);
 			void unchecked_blt(const Texture&, int, int, uint, uint, int, int, bool = true);
 
+			void fill_rect(uint, uint, uint, uint, u32);
+
 			u32 *begin( ) { return mTexture; }
 			u32 *end( ) { return mTexture + mWidth * mHeight; }
 			size_t width( ) const { return mWidth; }

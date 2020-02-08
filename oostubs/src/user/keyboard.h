@@ -3,9 +3,7 @@
 
 #include "thread/semaphore.h"
 
-#include "machine/plugbox.h"
 #include "machine/keyboard_gate.h"
-#include "machine/keyboard_controller.h"
 
 #include "lib/fixed_ringbuffer.h"
 
@@ -13,7 +11,7 @@
 
 namespace oostubs
 {
-	class Keyboard : private KeyboardGate
+	class Keyboard
 	{
 		public:
 			Keyboard( );
@@ -21,12 +19,14 @@ namespace oostubs
 			Key getc( );
 			Key agetc( );
 
-		protected:
-			void onKeyHit(Key) override;
+		private:
+			void accept(Key);
 
 		private:
 			FixedRingbuffer<Key, 0x100> mBuffer;
 			Semaphore mSemaphore;
+
+			friend class KeyboardGate;
 	};
 
 	typedef mpl::SingletonHolder<Keyboard> KeyboardManager;

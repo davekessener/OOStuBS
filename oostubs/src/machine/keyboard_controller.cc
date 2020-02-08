@@ -5,6 +5,10 @@
 
 #include "panic.h"
 
+#define BM_M_NX 0x10
+#define BM_M_NY 0x20
+#define BM_M_BUTTONS 0x07
+
 namespace oostubs {
 
 // Bits im Statusregister
@@ -80,6 +84,8 @@ KeyboardController::KeyboardController(void)
 	
 	// maximale Geschwindigkeit, minimale Verzoegerung
 	set_repeat_rate(0, 0);  
+
+	install_mouse();
 }
 
 // KEY_DECODED: Interpretiert die Make und Break-Codes der Tastatur und
@@ -370,11 +376,10 @@ void KeyboardController::set_led(KeyboardData::LED led, bool on)
 //          werden konnte, werden diese in Key zurueckgeliefert. Anderen-
 //          falls liefert key_hit() einen ungueltigen Wert zurueck, was
 //          mit Key::valid() ueberprueft werden kann.
-Key KeyboardController::key_hit(void)
+bool KeyboardController::key_hit(Response *r)
 {
-	PIC::Lock lock(PICManager::instance(), PIC::Device::KEYBOARD);
-
-	Key r;
+	PIC::Lock lock_kb(PICManager::instance(), PIC::Device::KEYBOARD);
+	PIC::Lock lock_m(PICManager::instance(), PIC::Device::MOUSE);
 
 	wait_for_port_empty();
 
@@ -388,7 +393,20 @@ Key KeyboardController::key_hit(void)
 			u8 dx = mDataPort.inb();
 			u8 dy = mDataPort.inb();
 
-			kout << "Mouse event: " << (void *) (u64) ((status << 16) | (dx << 8) | dy) << io::endl;
+			r->is_mouse = true;
+			r->mouse.pressed = status & BM_M_BUTTONS;
+			r->mouse.dx = dx;
+			r->mouse.dy = dy;
+
+//			kout << io::Format::BIN << io::set_width(8) << (u64) status
+//				 << io::Format::DEC << io::set_width(0)
+//				 << " " << status << " (" << r->mouse.dx
+//				 << ", " << r->mouse.dy << ")" << io::endl;
+
+			if(status & BM_M_NX) r->mouse.dx |= 0xFFFFFF00;
+			if(status & BM_M_NY) r->mouse.dy |= 0xFFFFFF00;
+
+			return true;
 		}
 		else
 		{
@@ -396,19 +414,19 @@ Key KeyboardController::key_hit(void)
 
 			if(key_decoded())
 			{
-				r = mGather;
+				r->key = mGather;
+				r->is_mouse = false;
+
+				return true;
 			}
 		}
 	}
 
-	return r;
+	return false;
 }
 
 void KeyboardController::install_mouse(void)
 {
-	Guard::Lock lock1(GuardManager::instance());
-	PIC::Lock lock2(PICManager::instance(), PIC::Device::KEYBOARD);
-
 	wait_for_port_empty();
 	mCtrlPort.outb(0xA8);
 
@@ -416,7 +434,6 @@ void KeyboardController::install_mouse(void)
 	mCtrlPort.outb(0x20);
 	while(!(mCtrlPort.inb() & outb));
 	u8 status = mDataPort.inb();
-	kout << "status " << status << io::endl;
 	wait_for_port_empty();
 	mCtrlPort.outb(0x60);
 	wait_for_port_empty();

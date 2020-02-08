@@ -6,6 +6,8 @@
 #include "gui/screen.h"
 #include "gui/dif.h"
 
+#include "user/mouse.h"
+
 namespace oostubs {
 
 namespace
@@ -28,8 +30,10 @@ void ScreensaverThread::execute(void)
 	Texture bg(w, h);
 	Texture ball(2 * r, 2 * r);
 	Texture icon{dif_load_from_file(initrd_root->find("textures/diablo.dif"))};
+	Texture cursor{dif_load_from_file(initrd_root->find("textures/diablo_cursor.dif"))};
 
 	Screen& screen{FramebufferManager::instance()};
+	Mouse& mouse{MouseManager::instance()};
 
 	for(int y = 0 ; y < h ; ++y)
 	{
@@ -59,6 +63,7 @@ void ScreensaverThread::execute(void)
 		screen.buffer().blt(bg, 0, 0);
 		screen.buffer().blt(icon, (w - icon.width()) / 2, (h - icon.height()) / 2);
 		screen.buffer().blt(ball, x, y);
+		screen.buffer().blt(cursor, mouse.position().x, mouse.position().y);
 
 		x += dx;
 		y += dy;

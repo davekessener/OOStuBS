@@ -6,6 +6,7 @@
 #include "mpl/singleton.h"
 
 #include "machine/scheduler_gate.h"
+#include "machine/keyboard_gate.h"
 
 namespace oostubs
 {
@@ -24,6 +25,7 @@ namespace oostubs
 			System(const System&) = delete;
 
 			SchedulerGate mSchedulerDriver;
+			KeyboardGate mKeyboardDriver;
 
 			friend CreationPolicy;
 	};

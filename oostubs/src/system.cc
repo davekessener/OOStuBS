@@ -10,6 +10,7 @@
 #include "machine/cpu.h"
 #include "machine/guard.h"
 #include "machine/real.h"
+#include "machine/keyboard_controller.h"
 
 #include "thread/customer.h"
 #include "thread/semaphore.h"
@@ -20,6 +21,7 @@
 
 #include "user/mutex.h"
 #include "user/keyboard.h"
+#include "user/mouse.h"
 #include "user/sleeper.h"
 
 #include "gui/texture.h"
@@ -46,10 +48,10 @@ void SystemThread::doRun(void)
 {
 	FramebufferManager::instance();
 
-//	ScreensaverThread screensaver;
-	Monitor monitor;
+	ScreensaverThread screensaver;
+//	Monitor monitor;
 
-	Thread *app = &monitor;
+	Thread *app = &screensaver;
 
 	app->start();
 	app->join();
@@ -64,6 +66,7 @@ void SystemThread::doRun(void)
 System::System(void)
 {
 	KeyboardManager::instance();
+	MouseManager::instance();
 }
 
 System::~System(void)
@@ -80,6 +83,8 @@ void System::run(void)
 	ASSERT(mboot_info_ptr->mods_count > 0);
 
 	initrd_root = (const initrd::Node *) (u64) ((mboot_module *) (u64) mboot_info_ptr->mods_addr)->mod_start;
+
+	KeyboardControllerManager::instance();
 
 	GuardManager::instance().enter();
 

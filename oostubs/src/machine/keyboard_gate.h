@@ -12,10 +12,8 @@ namespace oostubs
 			KeyboardGate( );
 
 		protected:
-			void doPrologue(uint) override;
+			void doPrologue(uint) override { }
 			void doEpilogue( ) override;
-
-			virtual void onKeyHit(Key) = 0;
 	};
 }
 
