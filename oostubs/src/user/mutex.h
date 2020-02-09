@@ -12,6 +12,8 @@ namespace oostubs
 
 			void lock( ) { mS.wait(); }
 			void unlock( ) { mS.signal(); }
+			void unlock_all( ) { while(!available()) unlock(); }
+			bool available( ) const { return mS.counter() > 0; }
 
 		private:
 			GuardedSemaphore mS;

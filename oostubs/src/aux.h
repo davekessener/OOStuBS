@@ -25,8 +25,6 @@ namespace oostubs
 {
 	enum class Port : uint16_t
 	{
-		CGA_CTRL    = 0x03D4,
-		CGA_DATA    = 0x03D5,
 		PIC_CTRL_M  = 0x0020,
 		PIC_DATA_M  = 0x0021,
 		PIC_CTRL_S  = 0x00A0,
@@ -35,19 +33,27 @@ namespace oostubs
 		PIT1_COUNT1 = 0x0041,
 		PIT1_COUNT2 = 0x0042,
 		PIT1_CTRL   = 0x0043,
-		KB_CTRL     = 0x0064,
 		KB_DATA     = 0x0060,
+		KB_CTRL     = 0x0064,
+		DMA_PAGE    = 0x008B,
+		DMA_ADDR    = 0x00C4,
+		DMA_COUNT   = 0x00C6,
+		DMA_MASK    = 0x00D4,
+		DMA_MODE    = 0x00D6,
+		DMA_CLEAR   = 0x00D8,
 		DSP_RESET   = 0x0226,
 		DSP_READ    = 0x022A,
 		DSP_WRITE   = 0x022C,
-		DSP_ACK     = 0x022E
+		DSP_ACK     = 0x022E,
+		CGA_CTRL    = 0x03D4,
+		CGA_DATA    = 0x03D5
 	};
 
 	enum class IRQ : uint8_t
 	{
-		TIMER = 0x20,
+		TIMER    = 0x20,
 		KEYBOARD = 0x21,
-		MOUSE = 0x2C
+		MOUSE    = 0x2C
 	};
 
 	template<typename A, typename B>

@@ -22,6 +22,8 @@ namespace oostubs
 			virtual void doPrologue(uint) = 0;
 			virtual void doEpilogue( ) { }
 
+			void update_epilogue_status(bool has_epilogue) { mHasEpi = has_epilogue; }
+
 		private:
 			bool mHasEpi;
 	};

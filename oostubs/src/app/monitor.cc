@@ -17,7 +17,12 @@ void Monitor::execute(void)
 
 	auto& mouse{MouseManager::instance()};
 
-	SoundcardControllerManager::instance();
+//	new(&SoundcardControllerManager::instance()) SoundcardController;
+
+	bool f = SoundcardControllerManager::instance().is_present();
+
+	kout << "SB16: " << (f ? "Y" : "N") << io::endl;
+	kout << &SoundcardControllerManager::instance() << io::endl;
 
 	while(true)
 	{

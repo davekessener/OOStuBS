@@ -9,8 +9,8 @@
 
 namespace oostubs
 {
-//	typedef mpl::SingletonHolder<CGAScreen> ScreenManager;
-	typedef mpl::SingletonHolder<Terminal> ScreenManager;
+	typedef mpl::SingletonHolder<CGAScreen> ScreenManager;
+//	typedef mpl::SingletonHolder<Terminal> ScreenManager;
 }
 
 #endif

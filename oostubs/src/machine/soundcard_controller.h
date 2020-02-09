@@ -4,6 +4,7 @@
 #include "aux.h"
 
 #include "machine/io_port.h"
+#include "machine/dma.h"
 
 #include "mpl/singleton.h"
 
@@ -22,6 +23,7 @@ namespace oostubs
 		private:
 			IO_Port mReset, mRead, mWrite, mAck;
 			bool mIsPresent;
+//			DMAController mDMA;
 	};
 
 	typedef mpl::SingletonHolder<SoundcardController> SoundcardControllerManager;

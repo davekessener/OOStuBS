@@ -17,6 +17,8 @@ namespace oostubs
 
 			void wait( ) { p(); }
 			void signal( ) { v(); }
+
+			int counter( ) const { return Semaphore::counter(); }
 	};
 }
 

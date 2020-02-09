@@ -18,7 +18,7 @@
 ;
 
 ; Stack fuer die main-Funktion
-STACKSIZE: equ 65536
+STACKSIZE: equ 0x10000
 
 ; Basisadresse des Grafikspeichers
 CGA: equ 0xB8000
@@ -35,7 +35,7 @@ MULTIBOOT_GRAPHMODE      equ   1<<2
 MULTIBOOT_HEADER_MAGIC   equ   0x1badb002
 
 ; Multiboot-Flags (ELF-spezifisch!)
-MULTIBOOT_HEADER_FLAGS   equ   MULTIBOOT_PAGE_ALIGN | MULTIBOOT_MEMORY_INFO | MULTIBOOT_GRAPHMODE
+MULTIBOOT_HEADER_FLAGS   equ   MULTIBOOT_PAGE_ALIGN | MULTIBOOT_MEMORY_INFO ;| MULTIBOOT_GRAPHMODE
 MULTIBOOT_HEADER_CHKSUM  equ   -(MULTIBOOT_HEADER_MAGIC + MULTIBOOT_HEADER_FLAGS)
 MULTIBOOT_EAX_MAGIC      equ   0x2badb002
 
@@ -523,15 +523,12 @@ init_stack:
 
 pml4:
 	times  4096 db 0
-;	resb   4096
 	alignb 4096
 
 pdp:
 	times  MAX_MEM*8 db 0
-;	resb   MAX_MEM*8
 	align  4096
-;	alignb 4096
 
 pd:
 	times  MAX_MEM*4096 db 0
-;	resb   MAX_MEM*4096
+
