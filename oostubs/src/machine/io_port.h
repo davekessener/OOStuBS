@@ -13,8 +13,10 @@ namespace oostubs
 	
 			void outb(uint8_t) const;
 			void outw(uint16_t) const;
+			void outl(uint32_t) const;
 			uint8_t inb() const;
 			uint16_t inw() const;
+			uint32_t inl() const;
 
 			uint16_t address( ) const { return mAddress; }
 			uint16_t port( ) const { return address(); }

@@ -14,10 +14,10 @@ namespace oostubs
 		public:
 		enum class Device : uint16_t
 		{
-			TIMER = (1<<0),
+			TIMER    = (1<<0),
 			KEYBOARD = (1<<1),
-			CASCADE = (1<<2),
-			MOUSE = (1<<12)
+			CASCADE  = (1<<2),
+			MOUSE    = (1<<12)
 		};
 
 		class Lock

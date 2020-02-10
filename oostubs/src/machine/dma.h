@@ -22,6 +22,7 @@ namespace oostubs
 
 		public:
 		static constexpr uint BUFFER_SIZE = 0x04000;
+		static constexpr uint CHANNEL = 5;
 
 		public:
 			DMAController( );

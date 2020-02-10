@@ -30,36 +30,44 @@ uint16_t IO_Port::inw(void) const
 
 #else
 
-extern "C" void outb(int port, int value);
-extern "C" void outw(int port, int value);
-extern "C" int inb(int port);
-extern "C" int inw(int port);
+extern "C" void out_b(int port, int value);
+extern "C" void out_w(int port, int value);
+extern "C" void out_l(int port, int value);
+extern "C" int in_b(int port);
+extern "C" int in_w(int port);
+extern "C" int in_l(int port);
 
 namespace oostubs {
 
-// OUTB: Byteweise Ausgabe eines Wertes ueber einen I/O-Port.
 void IO_Port::outb(uint8_t val) const
 { 
-	::outb(mAddress, val); 
-};
+	out_b(mAddress, val); 
+}
 
-// OUTW: Wortweise Ausgabe eines Wertes ueber einen I/O-Port.
 void IO_Port::outw(uint16_t val) const
 { 
-	::outw(mAddress, val); 
-};
+	out_w(mAddress, val); 
+}
 
-// INB: Byteweises Einlesen eines Wertes ueber einen I/O-Port.
+void IO_Port::outl(uint32_t val) const
+{
+	out_l(mAddress, val);
+}
+
 uint8_t IO_Port::inb(void) const
 { 
-	return ::inb(mAddress); 
-};
+	return in_b(mAddress); 
+}
 
-// INW: Wortweises Einlesen eines Wertes ueber einen I/O-Port.
 uint16_t IO_Port::inw(void) const
 { 
-	return ::inw(mAddress); 
-};
+	return in_w(mAddress); 
+}
+
+uint32_t IO_Port::inl(void) const
+{
+	return in_l(mAddress);
+}
 
 }
 

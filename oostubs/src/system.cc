@@ -11,7 +11,6 @@
 #include "machine/guard.h"
 #include "machine/real.h"
 #include "machine/keyboard_controller.h"
-//#include "machine/soundcard_controller.h"
 
 #include "thread/customer.h"
 #include "thread/semaphore.h"
@@ -30,6 +29,7 @@
 
 #include "app/screensaver.h"
 #include "app/monitor.h"
+#include "app/tictactoe.h"
 
 namespace oostubs {
 
@@ -50,7 +50,8 @@ void SystemThread::doRun(void)
 	FramebufferManager::instance();
 
 //	ScreensaverThread app;
-	Monitor app;
+//	Monitor app;
+	TicTacToe app;
 
 	app.start();
 	app.join();
@@ -84,7 +85,6 @@ void System::run(void)
 	initrd_root = (const initrd::Node *) (u64) ((mboot_module *) (u64) mboot_info_ptr->mods_addr)->mod_start;
 
 	KeyboardControllerManager::instance();
-//	SoundcardControllerManager::instance();
 
 	GuardManager::instance().enter();
 

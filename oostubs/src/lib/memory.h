@@ -10,5 +10,10 @@ void *memmove(void *, const void *, long unsigned int);
 
 }
 
+namespace oostubs
+{
+	void slow_memset(void *, u8, uint);
+}
+
 #endif
 

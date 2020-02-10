@@ -23,3 +23,14 @@ void *memmove(void *dst, const void *src, long unsigned int c)
 
 }
 
+namespace oostubs {
+
+void slow_memset(void *p, u8 v, uint l)
+{
+	volatile u8 *pp = (u8 *) p;
+	
+	while(l--) *pp++ = v;
+}
+
+}
+

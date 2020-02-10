@@ -6,17 +6,15 @@
 
 #include "panic.h"
 
-#define CHANNEL 5
-
 namespace oostubs {
 
 namespace
 {
-//	u8 dma_buffer[DMAController::BUFFER_SIZE << 1];
+	u8 dma_buffer[DMAController::BUFFER_SIZE << 1];
 
 	u8 *find_dma_buffer(void)
 	{
-		u8 *base = nullptr;//dma_buffer;
+		u8 *base = dma_buffer;
 
 		uint p1 = (((u64) base) >> 16);
 		uint p2 = (((u64) base + DMAController::BUFFER_SIZE - 1) >> 16);
@@ -41,6 +39,8 @@ DMAController::DMAController(void)
 	, mClear(Port::DMA_CLEAR)
 {
 	u8 *buf = find_dma_buffer();
+
+	ASSERT((((u64) buf) & 0xFFFF) < 0x10000 - BUFFER_SIZE);
 
 	mBuffer[0] = buf;
 	mBuffer[1] = buf + BUFFER_SIZE / 2;

@@ -105,6 +105,14 @@ namespace oostubs
 				}
 			};
 
+			struct ostream_mem_impl
+			{
+				ostream_mem_impl(const void *src, uint l) : src(src), len(l) { }
+
+				const void *src;
+				uint len;
+			};
+
 			template<typename S>
 			using ostream_meta_ops = mpl::make_list<
 				mpl::Cons<ostream_endl, ostream_endl_impl<S>>,
@@ -114,6 +122,7 @@ namespace oostubs
 
 		inline impl::ostream_endl endl( ) { return {}; }
 		inline impl::ostream_flush flush( ) { return {}; }
+		inline impl::ostream_mem_impl memory(const void *src, uint len) { return {src, len}; }
 
 		template<typename S, typename T, typename = mpl::enable_if<impl::is_an_ostream<S>>>
 		S& operator<<(S& os, T (*)(void))
@@ -168,7 +177,7 @@ namespace oostubs
 		}
 
 		template<typename S, typename = mpl::enable_if<impl::is_an_ostream<S>>>
-		S& operator<<(S& os, void *p)
+		S& operator<<(S& os, const void *p)
 		{
 			Format fmt = os.format();
 			uint w = os.width();
@@ -243,7 +252,7 @@ namespace oostubs
 				v /= base;
 			}
 
-			while(e - p < os.width())
+			while(os.width() && e - p <= os.width())
 			{
 				*--p = os.fill();
 			}
@@ -279,6 +288,49 @@ namespace oostubs
 		S& operator<<(S& os, unsigned int c)
 		{
 			return os << (unsigned long) c;
+		}
+
+		template<typename S, typename = mpl::enable_if<impl::is_an_ostream<S>>>
+		S& operator<<(S& os, const impl::ostream_mem_impl& mem)
+		{
+			u64 base = ((u64) mem.src) & ~0xF;
+			const u8 *p = (const u8 *) mem.src;
+			uint h = (mem.len + 0x10 + (base - ((u64) mem.src)) - 1) / 0x10;
+
+			Format fmt = os.format();
+			uint w = os.width();
+			char f = os.fill();
+
+			os.format(Format::HEX);
+			os.width(2);
+			os.fill('0');
+
+			for(uint dy = 0 ; dy < h ; ++dy)
+			{
+				os << &p[dy * 0x10] << ": ";
+
+				for(uint dx = 0 ; dx < 0x10 ; ++dx)
+				{
+					const u8 *pp = p + dx + dy * 0x10;
+
+					if(pp < p || p >= p + mem.len)
+					{
+						os << "   ";
+					}
+					else
+					{
+						os << *pp << " ";
+					}
+				}
+
+				os << "\n";
+			}
+
+			os.format(fmt);
+			os.width(w);
+			os.fill(f);
+
+			return os;
 		}
 	}
 }

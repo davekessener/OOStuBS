@@ -7,23 +7,17 @@
 namespace oostubs {
 
 Keyboard::Keyboard(void)
-	: mBuffer(true)
+	: mSemaphore(0)
 {
 }
 
 Key Keyboard::getc(void)
 {
-	while(true)
-	{
-		Guard::Lock lock(GuardManager::instance());
+	Guard::Lock lock(GuardManager::instance());
 
-		if(!mBuffer.empty())
-		{
-			return mBuffer.pop();
-		}
+	mSemaphore.wait();
 
-		mSemaphore.wait();
-	}
+	return mBuffer.pop();
 }
 
 Key Keyboard::agetc(void)
@@ -34,6 +28,8 @@ Key Keyboard::agetc(void)
 
 	if(!mBuffer.empty())
 	{
+		mSemaphore.wait();
+
 		key = mBuffer.pop();
 	}
 
@@ -44,7 +40,11 @@ void Keyboard::accept(Key key)
 {
 	mBuffer.push(key);
 
-	if(mSemaphore.counter() < 0)
+	if(mBuffer.full())
+	{
+		mBuffer.pop();
+	}
+	else
 	{
 		mSemaphore.signal();
 	}

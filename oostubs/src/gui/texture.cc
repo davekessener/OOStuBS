@@ -40,9 +40,9 @@ namespace
 		uint g2 = ((c2 >> 8) & 0xFF);
 		uint b2 =  (c2 & 0xFF);
 
-		uint f = 0xFFFF - ((0xFF - a1) * (0xFF - a2));
+		uint f = 0x10000- ((0x100 - a1) * (0x100 - a2));
 		uint f1 = (a1 << 16) / (f >> 8);
-		uint f2 = 0xFFFF - f1;
+		uint f2 = 0x10000 - f1;
 
 		uint a = f >> 8;
 		uint r = (f1 * r1 + f2 * r2) >> 16;

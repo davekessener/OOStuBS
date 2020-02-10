@@ -1,6 +1,6 @@
 #include "app/monitor.h"
 
-#include "machine/soundcard_controller.h"
+#include "machine/pci_controller.h"
 
 #include "io.h"
 
@@ -15,20 +15,23 @@ void Monitor::execute(void)
 
 //	auto& kb{KeyboardManager::instance()};
 
-	auto& mouse{MouseManager::instance()};
-
 //	new(&SoundcardControllerManager::instance()) SoundcardController;
 
-	bool f = SoundcardControllerManager::instance().is_present();
+//	SoundcardController& sound{SoundcardControllerManager::instance()};
 
-	kout << "SB16: " << (f ? "Y" : "N") << io::endl;
-	kout << &SoundcardControllerManager::instance() << io::endl;
+	PCIDevice hda;
+
+	bool found = PCIControllerManager::instance().search([](const PCIDevice& pci) {
+		return pci.header().class_code == 4 && pci.header().subclass == 3;
+	}, &hda);
+
+	if(found)
+	{
+		kout << "found HDA @" << hda.bus() << "," << hda.slot() << io::endl;
+	}
 
 	while(true)
 	{
-		for(uint i = 0 ; i < 0x100000 ; );
-
-		kout << "@(" << mouse.position().x << ", " << mouse.position().y << ")" << io::endl;
 	}
 }
 

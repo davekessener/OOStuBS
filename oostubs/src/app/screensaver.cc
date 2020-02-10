@@ -2,8 +2,6 @@
 
 #include "mboot.h"
 
-#include "machine/soundcard_controller.h"
-
 #include "gui/texture.h"
 #include "gui/screen.h"
 #include "gui/dif.h"
@@ -49,7 +47,7 @@ void ScreensaverThread::execute(void)
 		}
 	}
 
-	if(SoundcardControllerManager::instance().is_present())
+//	if(SoundcardControllerManager::instance().is_present())
 	{
 		Texture sound{dif_load_from_file(initrd_root->find("textures/sound.dif"))};
 

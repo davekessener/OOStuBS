@@ -7,6 +7,10 @@
 
 #include "mpl/singleton.h"
 
+#include "thread/semaphore.h"
+
+#include "lib/fixed_ringbuffer.h"
+
 namespace oostubs
 {
 	class Mouse
@@ -27,11 +31,24 @@ namespace oostubs
 			u32 x, y;
 		};
 
+		struct MouseEvent
+		{
+			Button button;
+			bool pressed;
+			uint x, y;
+
+			MouseEvent( ) { }
+			MouseEvent(Button btn, bool f, uint x, uint y)
+				: button(btn), pressed(f), x(x), y(y) { }
+		};
+
 		public:
 			Mouse( );
 
 			Position position( ) const { return {mX, mY}; }
 			bool pressed(Button b) const { return mButtons & static_cast<u8>(b); }
+			MouseEvent get( );
+			uint size( ) const { return mBuffer.size(); }
 
 		private:
 			void accept(uint, i32, i32);
@@ -39,6 +56,8 @@ namespace oostubs
 		private:
 			u32 mX, mY;
 			uint mButtons;
+			Semaphore mSemaphore;
+			FixedRingbuffer<MouseEvent, 0x100> mBuffer;
 
 			friend class KeyboardGate;
 	};

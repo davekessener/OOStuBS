@@ -19,6 +19,9 @@ namespace
 	}
 }
 
+constexpr size_t Screen::WIDTH;
+constexpr size_t Screen::HEIGHT;
+
 Screen::Screen(void)
 	: mBuffer((pitch() % sizeof(u32)) ? WIDTH : (pitch() / sizeof(u32)), HEIGHT)
 	, mFramebuffer(framebuffer())

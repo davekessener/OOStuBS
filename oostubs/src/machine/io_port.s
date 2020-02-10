@@ -13,10 +13,12 @@
 
 ; EXPORTIERTE FUNKTIONEN
 
-[GLOBAL outb]
-[GLOBAL outw]
-[GLOBAL inb]
-[GLOBAL inw]
+[GLOBAL out_b]
+[GLOBAL out_w]
+[GLOBAL out_l]
+[GLOBAL in_b]
+[GLOBAL in_w]
+[GLOBAL in_l]
 
 ; IMPLEMENTIERUNG DER FUNKTIONEN
 
@@ -26,7 +28,7 @@
 ;
 ;       C-Prototyp: void outb (int port, int value);
 
-outb:
+out_b:
 	push   rbp
 	mov    rbp, rsp
 	mov    rdx, rdi
@@ -39,7 +41,7 @@ outb:
 ;
 ;       C-Prototyp: void outw (int port, int value);
 
-outw:
+out_w:
 	push   rbp
 	mov    rbp, rsp
 	mov    rdx, rdi
@@ -48,11 +50,21 @@ outw:
 	pop    rbp
 	ret
 
+; void outl(u32 port, u32 val)
+out_l:
+	push rbp
+	mov rbp,rsp
+	mov rdx,rdi
+	mov rax,rsi
+	out dx,eax
+	pop rbp
+	ret
+
 ; INB: Byteweises Einlesen eines Wertes ueber einen I/O-Port.
 ;
 ;      C-Prototyp: int inb (int port);
 
-inb:
+in_b:
 	push   rbp
 	mov    rbp, rsp
 	mov    rdx, rdi
@@ -65,7 +77,7 @@ inb:
 ;
 ;      C-Prototyp: int inw (int port);
 
-inw:
+in_w:
 	push   rbp
 	mov    rbp, rsp
 	mov    rdx, rdi
@@ -73,3 +85,13 @@ inw:
 	in     ax, dx
 	pop    rbp
 	ret
+
+in_l:
+	push rbp
+	mov rbp,rsp
+	mov rdx,rdi
+	mov rax,rsi
+	in eax,dx
+	pop rbp
+	ret
+

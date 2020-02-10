@@ -9,7 +9,6 @@ namespace oostubs {
 Semaphore::Semaphore(uint i)
 	 : mCounter(i)
 {
-	ASSERT(mCounter > 0);
 }
 
 void Semaphore::p(void)
