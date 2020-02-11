@@ -107,9 +107,9 @@ namespace oostubs
 
 			struct ostream_mem_impl
 			{
-				ostream_mem_impl(const void *src, uint l) : src(src), len(l) { }
+				ostream_mem_impl(const volatile void *src, uint l) : src(src), len(l) { }
 
-				const void *src;
+				const volatile void *src;
 				uint len;
 			};
 
@@ -122,7 +122,8 @@ namespace oostubs
 
 		inline impl::ostream_endl endl( ) { return {}; }
 		inline impl::ostream_flush flush( ) { return {}; }
-		inline impl::ostream_mem_impl memory(const void *src, uint len) { return {src, len}; }
+		inline impl::ostream_mem_impl memory(const volatile void *src, uint len) { return {src, len}; }
+		inline impl::ostream_mem_impl memory(const void *src, uint len) { return {(const volatile void *) src, len}; }
 
 		template<typename S, typename T, typename = mpl::enable_if<impl::is_an_ostream<S>>>
 		S& operator<<(S& os, T (*)(void))
@@ -177,7 +178,7 @@ namespace oostubs
 		}
 
 		template<typename S, typename = mpl::enable_if<impl::is_an_ostream<S>>>
-		S& operator<<(S& os, const void *p)
+		S& operator<<(S& os, const volatile void *p)
 		{
 			Format fmt = os.format();
 			uint w = os.width();
@@ -196,6 +197,12 @@ namespace oostubs
 			os.fill(f);
 
 			return os;
+		}
+
+		template<typename S, typename = mpl::enable_if<impl::is_an_ostream<S>>>
+		S& operator<<(S& os, const void *p)
+		{
+			return os << static_cast<const volatile void *>(p);
 		}
 
 		template<typename S, typename = mpl::enable_if<impl::is_an_ostream<S>>>

@@ -50,8 +50,8 @@ void SystemThread::doRun(void)
 	FramebufferManager::instance();
 
 //	ScreensaverThread app;
-//	Monitor app;
-	TicTacToe app;
+	Monitor app;
+//	TicTacToe app;
 
 	app.start();
 	app.join();

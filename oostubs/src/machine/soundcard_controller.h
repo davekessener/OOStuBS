@@ -5,7 +5,7 @@
 #include "initrd.h"
 
 #include "machine/io_port.h"
-#include "machine/dma.h"
+#include "machine/pci.h"
 
 #include "mpl/singleton.h"
 
@@ -13,25 +13,39 @@ namespace oostubs
 {
 	class SoundcardController
 	{
+		struct RB
+		{
+			RB(uint);
+
+			volatile u8 *base;
+			volatile u32 *buffer;
+		};
+
+		struct CORB : public RB
+		{
+			CORB( ) : RB(sizeof(u32)) { }
+
+			void setup(volatile void *);
+
+			void write(uint, uint, uint, u8);
+		};
+
+		struct RIRB : public RB
+		{
+			RIRB( ) : RB(sizeof(u64)) { }
+
+			void setup(volatile void *);
+		};
+
 		public:
 			SoundcardController( );
-
-			bool is_present( ) const { return mIsPresent; }
-
-			void play(const initrd::Node *);
+			bool present( ) const { return mHDA.valid(); }
 
 		private:
-			bool compute_present( );
-			void update( );
-			void write(IO_Port&, u8);
-			void write(u8 v) { write(mWrite, v); }
-			u8 read( );
-
-		private:
-			IO_Port mReset, mRead, mWrite, mAck;
-			IO_Port mMixerCtrl, mMixerData;
-			bool mIsPresent;
-			DMAController mDMA;
+			PCIDevice mHDA;
+			u16 mVersion;
+			CORB mCORB;
+			RIRB mRIRB;
 	};
 
 	typedef mpl::SingletonHolder<SoundcardController> SoundcardControllerManager;

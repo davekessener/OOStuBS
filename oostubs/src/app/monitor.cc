@@ -17,19 +17,6 @@ void Monitor::execute(void)
 
 //	new(&SoundcardControllerManager::instance()) SoundcardController;
 
-//	SoundcardController& sound{SoundcardControllerManager::instance()};
-
-	PCIDevice hda;
-
-	bool found = PCIControllerManager::instance().search([](const PCIDevice& pci) {
-		return pci.header().class_code == 4 && pci.header().subclass == 3;
-	}, &hda);
-
-	if(found)
-	{
-		kout << "found HDA @" << hda.bus() << "," << hda.slot() << io::endl;
-	}
-
 	while(true)
 	{
 	}

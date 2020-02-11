@@ -3,6 +3,8 @@
 
 #include "aux.h"
 
+#include "mpl/utils.h"
+
 #include "machine/io_port.h"
 
 namespace oostubs
@@ -20,10 +22,22 @@ namespace oostubs
 			{
 				u32 reserved[12];
 			} unknown;
+			struct
+			{
+				u32 bar[6];
+				u32 cis_ptr;
+				u16 subsys_vendor_id, subsys_device_id;
+				u32 expansion_addr;
+				u8 capabilities;
+				u8 reserved[7];
+				u8 int_line, int_pin, min_grant, max_latency;
+			} base;
 		} body;
 	} __attribute__((packed));
 
 	static_assert(sizeof(pci_header) == 64, "");
+	static_assert(sizeof(mpl::declval<pci_header>().body.unknown) == 48, "");
+	static_assert(sizeof(mpl::declval<pci_header>().body.base) == 48, "");
 
 	class PCIDevice
 	{
@@ -39,9 +53,11 @@ namespace oostubs
 			uint fidx( ) const { return mFunction; }
 
 			u32 read(uint);
+			void write(uint, u32);
 
 		private:
 			static u32 read(uint, uint, uint, uint);
+			static void write(uint, uint, uint, uint, u32);
 			static bool read_header(uint, uint, uint, pci_header *);
 
 		private:

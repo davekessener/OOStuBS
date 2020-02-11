@@ -76,6 +76,12 @@ namespace oostubs
 		{
 			return static_cast<remove_reference<T>&&>(e);
 		}
+
+		template<typename T>
+		T&& declval(void)
+		{
+			return *((T *) nullptr);
+		}
 	}
 }
 

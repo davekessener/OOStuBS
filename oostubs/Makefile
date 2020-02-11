@@ -193,13 +193,13 @@ bootdisk: bootdisk.iso
 # 'qemu' ruft den qemu-Emulator mit dem System auf.
 
 qemu: bootdisk.iso
-	$(QEMU) -drive file=bootdisk.iso,format=raw -k en-us -soundhw sb16
+	$(QEMU) -drive file=bootdisk.iso,format=raw -k en-us -soundhw all
 
 # --------------------------------------------------------------------------
 # 'qemu-smp' ruft den qemu-Emulator mit SMP-Support und 2 CPUs mit dem System auf.
 
 qemu-smp: bootdisk.iso
-	$(QEMU) -drive file=bootdisk.iso,format=raw -k en-us -smp 2 -soundhw sb16
+	$(QEMU) -drive file=bootdisk.iso,format=raw -k en-us -smp 2 -soundhw all
 
 # --------------------------------------------------------------------------
 # 'qemu-gdb' ruft den qemu-Emulator mit aktiviertem GDB-Stub mit dem System
@@ -207,7 +207,7 @@ qemu-smp: bootdisk.iso
 
 qemu-gdb: bootdisk.iso
 	$(VERBOSE) echo "target remote localhost:$(shell echo $$(( $$(id -u) + 1023 )))" > /tmp/gdbcommands.$(shell id -u)
-	$(QEMU) -drive file=bootdisk.iso,format=raw -k en-us -soundhw sb16 -gdb tcp::$(shell echo $$(( $$(id -u) + 1023 )))
+	$(QEMU) -drive file=bootdisk.iso,format=raw -k en-us -soundhw all -gdb tcp::$(shell echo $$(( $$(id -u) + 1023 )))
 
 # --------------------------------------------------------------------------
 # 'gdb' startet den GDB-Debugger und verbindet sich mit dem GDB-Stub des vorher

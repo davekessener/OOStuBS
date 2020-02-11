@@ -34,6 +34,11 @@ u32 PCIDevice::read(uint a)
 	return read(mBus, mDevice, mFunction, a);
 }
 
+void PCIDevice::write(uint a, u32 v)
+{
+	write(mBus, mDevice, mFunction, a, v);
+}
+
 u32 PCIDevice::read(uint b, uint d, uint f, uint a)
 {
 	ASSERT(a == (a & 0xFC));
@@ -41,6 +46,14 @@ u32 PCIDevice::read(uint b, uint d, uint f, uint a)
 	sCfgAddr.outl(0x80000000 | (b << 16) | (d << 11) | (f << 8) | a);
 
 	return sCfgData.inl();
+}
+
+void PCIDevice::write(uint b, uint d, uint f, uint a, u32 v)
+{
+	ASSERT(a == (a & 0xFC));
+
+	sCfgAddr.outl(0x80000000 | (b << 16) | (d << 11) | (f << 8) | a);
+	sCfgData.outl(v);
 }
 
 bool PCIDevice::read_header(uint b, uint d, uint f, pci_header *h)
