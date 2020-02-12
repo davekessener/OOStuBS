@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_MACHINE_CPU_H
 #define OOSTUBS_MACHINE_CPU_H
 
-#include "aux.h"
+#include "lib.h"
 
 namespace oostubs
 {

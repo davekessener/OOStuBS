@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_GUI_TEXTURE_H
 #define OOSTUBS_GUI_TEXTURE_H
 
-#include "aux.h"
+#include "lib.h"
 
 namespace oostubs
 {

@@ -11,7 +11,7 @@
 #ifndef OOSTUBS_MACHINE_KEY_H
 #define OOSTUBS_MACHINE_KEY_H
 
-#include "aux.h"
+#include "lib.h"
 
 namespace oostubs
 {

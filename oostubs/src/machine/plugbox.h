@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_MACHINE_PLUGBOX_H
 #define OOSTUBS_MACHINE_PLUGBOX_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "mpl/singleton.h"
 

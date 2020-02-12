@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_LIB_PROMISE_H
 #define OOSTUBS_LIB_PROMISE_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "user/mutex.h"
 

@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_LIB_MEMORY_H
 #define OOSTUBS_LIB_MEMORY_H
 
-#include "aux.h"
+#include "lib.h"
 
 extern "C" {
 

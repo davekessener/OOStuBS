@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_MPL_FTOR_H
 #define OOSTUBS_MPL_FTOR_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "mpl/utils.h"
 #include "mpl/type_list.h"

@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_MACHINE_PANICGATE_H
 #define OOSTUBS_MACHINE_PANICGATE_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "machine/gate.h"
 

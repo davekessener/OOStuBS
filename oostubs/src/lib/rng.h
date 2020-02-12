@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_LIB_RNG_H
 #define OOSTUBS_LIB_RNG_H
 
-#include "aux.h"
+#include "lib.h"
 
 namespace oostubs
 {

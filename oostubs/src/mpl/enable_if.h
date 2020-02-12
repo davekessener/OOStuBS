@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_MPL_ENABLEIF_H
 #define OOSTUBS_MPL_ENABLEIF_H
 
-#include "aux.h"
+#include "lib.h"
 
 namespace oostubs
 {

@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_LIB_VECTOR_H
 #define OOSTUBS_LIB_VECTOR_H
 
-#include "aux.h"
+#include "lib.h"
 #include "panic.h"
 
 #include "mpl/utils.h"

@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_MPL_SINGLETON_H
 #define OOSTUBS_MPL_SINGLETON_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "utils/shutdown_service.h"
 

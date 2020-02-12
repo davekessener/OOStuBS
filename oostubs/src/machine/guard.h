@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_MACHINE_GUARD_H
 #define OOSTUBS_MACHINE_GUARD_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "lib/lockable.h"
 #include "lib/fixed_ringbuffer.h"

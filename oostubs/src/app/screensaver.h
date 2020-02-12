@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_APP_SCREENSAVER_H
 #define OOSTUBS_APP_SCREENSAVER_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "user/thread.h"
 

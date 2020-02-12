@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_USER_THREAD_H
 #define OOSTUBS_USER_THREAD_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "thread/customer.h"
 #include "thread/guarded_semaphore.h"

@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_SYS_SCHEDULER_H
 #define OOSTUBS_SYS_SCHEDULER_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "thread/organizer.h"
 

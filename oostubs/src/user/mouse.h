@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_USER_MOUSE_H
 #define OOSTUBS_USER_MOUSE_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "machine/keyboard_gate.h"
 

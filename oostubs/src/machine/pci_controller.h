@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_MACHINE_PCICONTROLLER_H
 #define OOSTUBS_MACHINE_PCICONTROLLER_H
 
-#include "aux.h"
+#include "lib.h"
 #include "panic.h"
 
 #include "machine/pci.h"

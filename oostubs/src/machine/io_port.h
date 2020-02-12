@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_MACHINE_IOPORT_H
 #define OOSTUBS_MACHINE_IOPORT_H
 
-#include "aux.h"
+#include "lib.h"
 
 namespace oostubs
 {

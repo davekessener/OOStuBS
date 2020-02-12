@@ -1,7 +1,7 @@
 #ifndef LIB_FLOAT_H
 #define LIB_FLOAT_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "lib/o_stream.h"
 

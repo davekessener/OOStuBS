@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_GUI_TERMINAL_H
 #define OOSTUBS_GUI_TERMINAL_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "machine/cga_screen.h"
 

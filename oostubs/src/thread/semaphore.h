@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_THREAD_SEMAPHORE_H
 #define OOSTUBS_THREAD_SEMAPHORE_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "thread/waitingroom.h"
 

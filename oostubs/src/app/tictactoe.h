@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_APP_TICTACTOE_H
 #define OOSTUBS_APP_TICTACTOE_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "user/thread.h"
 

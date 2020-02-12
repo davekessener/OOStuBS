@@ -1,6 +1,6 @@
 #include "system.h"
 
-#include "aux.h"
+#include "lib.h"
 #include "io.h"
 #include "mboot.h"
 #include "initrd.h"

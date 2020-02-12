@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_THREAD_WAITINGROOM_H
 #define OOSTUBS_THREAD_WAITINGROOM_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "lib/fixed_ringbuffer.h"
 

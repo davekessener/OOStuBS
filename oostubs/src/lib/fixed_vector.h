@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_UTILS_FIXEDVECTOR_H
 #define OOSTUBS_UTILS_FIXEDVECTOR_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "mpl/utils.h"
 

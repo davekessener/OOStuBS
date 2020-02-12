@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_MACHINE_PCI_H
 #define OOSTUBS_MACHINE_PCI_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "mpl/utils.h"
 

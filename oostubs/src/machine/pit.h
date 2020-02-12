@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_MACHINE_PIT_H
 #define OOSTUBS_MACHINE_PIT_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "machine/io_port.h"
 

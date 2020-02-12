@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_INITRD_H
 #define OOSTUBS_INITRD_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "rd.h"
 

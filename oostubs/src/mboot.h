@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_MBOOT_H
 #define OOSTUBS_MBOOT_H
 
-#include "aux.h"
+#include "lib.h"
 
 #define MBOOT_FLAG_MEM (1<<0)
 #define MBOOT_FLAG_MODS (1<<3)

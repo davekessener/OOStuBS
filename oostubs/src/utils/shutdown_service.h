@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_UTILS_SHUTDOWNSERVICE_H
 #define OOSTUBS_UTILS_SHUTDOWNSERVICE_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "lib/fixed_vector.h"
 

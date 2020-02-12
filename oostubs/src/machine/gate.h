@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_MACHINE_GATE_H
 #define OOSTUBS_MACHINE_GATE_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "machine/pic.h"
 

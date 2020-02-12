@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_THREAD_SCHEDULER_H
 #define OOSTUBS_THREAD_SCHEDULER_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "lib/fixed_ringbuffer.h"
 

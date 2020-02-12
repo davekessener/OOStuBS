@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_THREAD_CUSTOMER_H
 #define OOSTUBS_THREAD_CUSTOMER_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "thread/coroutine.h"
 #include "thread/waitingroom.h"

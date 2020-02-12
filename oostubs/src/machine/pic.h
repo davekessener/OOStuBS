@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_MACHINE_PIC_H
 #define OOSTUBS_MACHINE_PIC_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "mpl/singleton.h"
 

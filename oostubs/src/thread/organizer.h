@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_THREAD_ORGANIZER_H
 #define OOSTUBS_THREAD_ORGANIZER_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "thread/scheduler.h"
 #include "thread/waitingroom.h"

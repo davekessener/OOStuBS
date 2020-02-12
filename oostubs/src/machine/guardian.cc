@@ -1,4 +1,4 @@
-#include "aux.h"
+#include "lib.h"
 
 #include "machine/plugbox.h"
 #include "machine/guard.h"

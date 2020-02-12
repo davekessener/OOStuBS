@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_GUI_SCREEN_H
 #define OOSTUBS_GUI_SCREEN_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "gui/texture.h"
 

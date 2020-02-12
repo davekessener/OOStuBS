@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_MACHINE_SCHEDULERGATE_H
 #define OOSTUBS_MACHINE_SCHEDULERGATE_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "sys/scheduler.h"
 

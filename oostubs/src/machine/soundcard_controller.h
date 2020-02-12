@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_MACHINE_SOUNDCARD_H
 #define OOSTUBS_MACHINE_SOUNDCARD_H
 
-#include "aux.h"
+#include "lib.h"
 #include "initrd.h"
 
 #include "machine/io_port.h"
