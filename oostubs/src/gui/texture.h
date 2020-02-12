@@ -19,6 +19,7 @@ namespace oostubs
 
 		public:
 			Texture(size_t, size_t);
+			Texture(const Texture&);
 			Texture(Texture&& tx) : mTexture(tx.mTexture), mWidth(tx.mWidth), mHeight(tx.mHeight) { tx.mTexture = nullptr; }
 			~Texture( );
 

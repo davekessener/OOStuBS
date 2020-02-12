@@ -61,6 +61,14 @@ Texture::Texture(size_t w, size_t h)
 	memset(mTexture, 0, mWidth * mHeight * sizeof(u32));
 }
 
+Texture::Texture(const Texture& tx)
+	: mTexture(new u32[tx.width() * tx.height()])
+	, mWidth(tx.width())
+	, mHeight(tx.height())
+{
+	memmove(mTexture, tx.mTexture, mWidth * mHeight * sizeof(u32));
+}
+
 Texture::~Texture(void)
 {
 	delete[] mTexture;

@@ -32,6 +32,7 @@ namespace oostubs
 			void push(const_reference);
 			value_type pop( );
 			bool remove(const_reference);
+			value_type& top( );
 
 			bool empty( ) const { return mReadIdx == mWriteIdx; }
 			bool full( ) const { return mReadIdx == ((mWriteIdx + 1) % (N+1)); }
@@ -72,6 +73,14 @@ namespace oostubs
 		mReadIdx = (mReadIdx + 1) % (N+1);
 
 		return r;
+	}
+
+	template<typename T, size_t N>
+	T& FixedRingbuffer<T, N>::top(void)
+	{
+		ASSERT(!empty());
+
+		return mContent[mReadIdx];
 	}
 
 	template<typename T, size_t N>

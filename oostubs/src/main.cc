@@ -1,4 +1,4 @@
-#include "aux.h"
+#include "lib.h"
 #include "system.h"
 #include "mboot.h"
 

@@ -1,7 +1,7 @@
 #ifndef OOSTUBS_SYSTEM_H
 #define OOSTUBS_SYSTEM_H
 
-#include "aux.h"
+#include "lib.h"
 
 #include "mpl/singleton.h"
 

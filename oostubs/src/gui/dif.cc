@@ -8,6 +8,7 @@ namespace oostubs {
 
 Texture dif_load_from_file(const initrd::Node *f)
 {
+	ASSERT(f);
 	ASSERT(f->size() > 10);
 
 	const u8 *base = f->content();
